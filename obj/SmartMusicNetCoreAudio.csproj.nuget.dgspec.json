@@ -1,0 +1,71 @@
+{
+  "format": 1,
+  "restore": {
+    "G:\\毕业设计\\三端程序\\SmartMusicNetCoreAudio\\SmartMusicNetCoreAudio.csproj": {}
+  },
+  "projects": {
+    "G:\\毕业设计\\三端程序\\SmartMusicNetCoreAudio\\SmartMusicNetCoreAudio.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "G:\\毕业设计\\三端程序\\SmartMusicNetCoreAudio\\SmartMusicNetCoreAudio.csproj",
+        "projectName": "SmartMusicNetCoreAudio",
+        "projectPath": "G:\\毕业设计\\三端程序\\SmartMusicNetCoreAudio\\SmartMusicNetCoreAudio.csproj",
+        "packagesPath": "D:\\nuget\\packages",
+        "outputPath": "G:\\毕业设计\\三端程序\\SmartMusicNetCoreAudio\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\17641\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "dependencies": {
+            "NetCoreAudio": {
+              "target": "Package",
+              "version": "[1.6.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

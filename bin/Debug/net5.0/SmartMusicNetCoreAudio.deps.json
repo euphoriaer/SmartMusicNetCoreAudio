@@ -1,0 +1,41 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v5.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v5.0": {
+      "SmartMusicNetCoreAudio/1.0.0": {
+        "dependencies": {
+          "NetCoreAudio": "1.6.3"
+        },
+        "runtime": {
+          "SmartMusicNetCoreAudio.dll": {}
+        }
+      },
+      "NetCoreAudio/1.6.3": {
+        "runtime": {
+          "lib/netstandard2.0/NetCoreAudio.dll": {
+            "assemblyVersion": "1.6.3.0",
+            "fileVersion": "1.6.3.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "SmartMusicNetCoreAudio/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "NetCoreAudio/1.6.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-7Awjc/Z9t4dAM3UDWaSxM0SMJera+htKjtDeI0y8Bc07f9HvlOEc8GrUVjUqt3LfSIlm4pcFdYZ3nDZHVum0VQ==",
+      "path": "netcoreaudio/1.6.3",
+      "hashPath": "netcoreaudio.1.6.3.nupkg.sha512"
+    }
+  }
+}
