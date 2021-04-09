@@ -63,7 +63,7 @@ namespace SmartMusicServer
                 try
                 {
                     Socket socketWitch = o as Socket;
-                    //等待客户端连接，并且创建负责通信的socket
+                    //等待客户端连接，并且创建负责通信的socket,
                     socketSend = socketWitch.Accept();
                     //将负责通信的socket 存起来，等待转发消息
                     clients.Add(socketSend);
@@ -71,13 +71,9 @@ namespace SmartMusicServer
                     Console.WriteLine("连接成功" + socketSend.RemoteEndPoint.ToString());
                     Console.WriteLine(socketSend.RemoteEndPoint + ":发送消息: " + "服务器收到连接");
 
-                    foreach (var item in clients)
-                    {
-                     SendMessage(item, "服务器收到连接");//将收到的消息转发给所有客户端，在收到消息的客户端处理逻辑
-
-                    }
+                    SendMessage(socketSend, "服务器收到连接");
                     //todo 判断连接状态，是否断开
-                    Receive(socketSend);
+                  
                     Thread th = new Thread(Receive);
                     th.IsBackground = true;
                     th.Start(socketSend);
@@ -119,9 +115,17 @@ namespace SmartMusicServer
                     //todo 使用心跳机制确保客户端活跃
                     string str = Encoding.UTF8.GetString(buffer, 0, r);//todo  从0读到r，优化,加入长度信息，就可以不从0开始读
                     Console.WriteLine(socketSend.RemoteEndPoint + ":收到消息: " + str);
+                    //todo 转发收到的消息
+                    foreach (var item in clients)
+                    {
+                        Console.WriteLine("发送消息"+item.RemoteEndPoint+str);
+                        SendMessage(item, str);//将收到的消息转发给所有客户端，在收到消息的客户端处理逻辑
+
+                    }
                     if (str=="关闭连接")
                     {
                         Console.WriteLine("已关闭");//todo 虚假的关闭，还是要用事件
+                        clients.Remove(socketSend);//关闭后 从队列清除
                     }
 
                 }

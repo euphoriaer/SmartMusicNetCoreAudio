@@ -8,7 +8,6 @@ namespace SmartMusicNetCoreAudio
 {
     internal static class Net
     {
-        public static bool isConnect = false;
         private static Socket socketSend = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
         /// <summary>
@@ -19,15 +18,11 @@ namespace SmartMusicNetCoreAudio
         /// <param name="clientName">客户端姓名</param>
         public static void ContrentNet(string ip, int port, String clientName)
         {
+          
             //连接网络
             IPAddress iP = IPAddress.Parse(ip);
             IPEndPoint point = new IPEndPoint(iP, port);
             socketSend.Connect(point);//连接远程服务器
-
-
-        
-
-
 
             Console.WriteLine("开始连接服务器");
 
@@ -48,9 +43,15 @@ namespace SmartMusicNetCoreAudio
         /// <param name="msg"></param>
         public static void SendMessage(string msg)
         {
-            byte[] msgs = System.Text.Encoding.UTF8.GetBytes(msg);//转成字节数组
-            //发送消息
-            socketSend.Send(msgs);
+            try
+            {
+                byte[] msgs = System.Text.Encoding.UTF8.GetBytes(msg);//转成字节数组
+                                                                      //发送消息
+                socketSend.Send(msgs);
+            }
+            catch (Exception)
+            {
+            }
         }
 
         public static void Receive()
@@ -59,6 +60,9 @@ namespace SmartMusicNetCoreAudio
             {
                 try
                 {
+                    //Socket socketSend = o as Socket;
+                    //负责通信的socket，开始接受消息，直接用socketsend会阻塞，无法接受消息
+
                     byte[] buffer = new byte[1024 * 1024 * 2];//接收数据的容器
                     int r = socketSend.Receive(buffer);//将一次数据放图buffer缓冲区
                     if (r == 0)
@@ -67,21 +71,47 @@ namespace SmartMusicNetCoreAudio
                     }
                     string s = Encoding.UTF8.GetString(buffer, 0, r);
                     Console.WriteLine("收到了服务器消息：" + s);
-                    isConnect = true;//收到服务器消息，将连接置true，表示可以发送客户端姓名
+                    Function(s);
                 }
                 catch (Exception)
                 {
-
-                 
                 }
-                
             }
+        }
+
+        private static void Function(string str)
+        {
+            if (str == "播放")
+            {
+                Console.WriteLine("服务器：播放");
+                Program.PlayMusic();
+            }
+            else if (str == "暂停")
+            {
+                Console.WriteLine("服务器：暂停");
+                Program.PauseMusic();
+            }
+            else if(str == "上一曲")
+            {
+                Console.WriteLine("服务器：上一曲");
+                Program.UpMusic();
+            }
+            else if(str == "下一曲")
+            {
+                Console.WriteLine("服务器：下一曲");
+                Program.DownMusic();
+            }
+            else if(str == "停止")
+            {
+                Console.WriteLine("服务器：停止");
+                Program.StopMusic();
+            }
+            return;
         }
 
         public static void Close()
         {
             socketSend.Close();
         }
-
     }
 }
