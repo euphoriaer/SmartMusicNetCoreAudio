@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "kmg0Z4WbLqeIlehwkW+pukAvcv9FR1+eKOo9KB7prXkLZZVWcGGP2hGDjQmwijiI19oYcU/v4y50WYLqCUvUeA==",
+  "success": true,
+  "projectFilePath": "G:\\毕业设计\\三端程序\\SmartMusicServer\\SmartMusicServer.csproj",
+  "expectedPackageFiles": [
+    "D:\\nuget\\packages\\google.protobuf\\3.15.7\\google.protobuf.3.15.7.nupkg.sha512",
+    "D:\\nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512",
+    "D:\\nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.2\\system.runtime.compilerservices.unsafe.4.5.2.nupkg.sha512"
+  ],
+  "logs": []
+}
