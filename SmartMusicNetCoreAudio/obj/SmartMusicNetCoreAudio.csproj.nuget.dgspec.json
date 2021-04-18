@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "G:\\毕业设计\\三端程序\\SmartMusicNetCoreAudio\\SmartMusicNetCoreAudio.csproj": {}
+    "G:\\graduationProject\\Program\\SmartMusicNetCoreAudio\\SmartMusicNetCoreAudio.csproj": {}
   },
   "projects": {
-    "G:\\毕业设计\\三端程序\\SmartMusicNetCoreAudio\\SmartMusicNetCoreAudio.csproj": {
+    "G:\\graduationProject\\Program\\SmartMusicNetCoreAudio\\SmartMusicNetCoreAudio.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\毕业设计\\三端程序\\SmartMusicNetCoreAudio\\SmartMusicNetCoreAudio.csproj",
+        "projectUniqueName": "G:\\graduationProject\\Program\\SmartMusicNetCoreAudio\\SmartMusicNetCoreAudio.csproj",
         "projectName": "SmartMusicNetCoreAudio",
-        "projectPath": "G:\\毕业设计\\三端程序\\SmartMusicNetCoreAudio\\SmartMusicNetCoreAudio.csproj",
+        "projectPath": "G:\\graduationProject\\Program\\SmartMusicNetCoreAudio\\SmartMusicNetCoreAudio.csproj",
         "packagesPath": "D:\\nuget\\packages",
-        "outputPath": "G:\\毕业设计\\三端程序\\SmartMusicNetCoreAudio\\obj\\",
+        "outputPath": "G:\\graduationProject\\Program\\SmartMusicNetCoreAudio\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -43,9 +43,17 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
+            "LitJson": {
+              "target": "Package",
+              "version": "[0.17.0, )"
+            },
             "NetCoreAudio": {
               "target": "Package",
               "version": "[1.6.3, )"
+            },
+            "NodaTime": {
+              "target": "Package",
+              "version": "[3.0.5, )"
             }
           },
           "imports": [

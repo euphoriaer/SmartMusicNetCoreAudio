@@ -2,6 +2,15 @@
   "version": 3,
   "targets": {
     "net5.0": {
+      "LitJson/0.17.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/LitJSON.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/LitJSON.dll": {}
+        }
+      },
       "NetCoreAudio/1.6.3": {
         "type": "package",
         "compile": {
@@ -10,10 +19,49 @@
         "runtime": {
           "lib/netstandard2.0/NetCoreAudio.dll": {}
         }
+      },
+      "NodaTime/3.0.5": {
+        "type": "package",
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "4.7.1"
+        },
+        "compile": {
+          "lib/netstandard2.0/NodaTime.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/NodaTime.dll": {}
+        }
+      },
+      "System.Runtime.CompilerServices.Unsafe/4.7.1": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp2.0/System.Runtime.CompilerServices.Unsafe.dll": {}
+        }
       }
     }
   },
   "libraries": {
+    "LitJson/0.17.0": {
+      "sha512": "yFkykFlK9ohRNOr09OGM4qS5STNvzln0mqewvARlJMIujuBo1BBpTKmcNFi6+Iq69GI3JO9eR12tNepN/caO6Q==",
+      "type": "package",
+      "path": "litjson/0.17.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net20/LitJSON.dll",
+        "lib/net35/LitJSON.dll",
+        "lib/net40/LitJSON.dll",
+        "lib/net45/LitJSON.dll",
+        "lib/netstandard1.5/LitJSON.dll",
+        "lib/netstandard2.0/LitJSON.dll",
+        "litjson.0.17.0.nupkg.sha512",
+        "litjson.nuspec",
+        "litjson.png"
+      ]
+    },
     "NetCoreAudio/1.6.3": {
       "sha512": "7Awjc/Z9t4dAM3UDWaSxM0SMJera+htKjtDeI0y8Bc07f9HvlOEc8GrUVjUqt3LfSIlm4pcFdYZ3nDZHVum0VQ==",
       "type": "package",
@@ -27,11 +75,57 @@
         "netcoreaudio.1.6.3.nupkg.sha512",
         "netcoreaudio.nuspec"
       ]
+    },
+    "NodaTime/3.0.5": {
+      "sha512": "ctgx76GTZ3hcE0lV/XepXskkZ2m3F/XSftwb/a3vK+vSorbT3QhGgWp/ZNb13oyKQhBdFIPiISilvx49LQggtw==",
+      "type": "package",
+      "path": "nodatime/3.0.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/NodaTime.dll",
+        "lib/netstandard2.0/NodaTime.pdb",
+        "lib/netstandard2.0/NodaTime.xml",
+        "nodatime.3.0.5.nupkg.sha512",
+        "nodatime.nuspec"
+      ]
+    },
+    "System.Runtime.CompilerServices.Unsafe/4.7.1": {
+      "sha512": "zOHkQmzPCn5zm/BH+cxC1XbUS3P4Yoi3xzW7eRgVpDR2tPGSzyMZ17Ig1iRkfJuY0nhxkQQde8pgePNiA7z7TQ==",
+      "type": "package",
+      "path": "system.runtime.compilerservices.unsafe/4.7.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net461/System.Runtime.CompilerServices.Unsafe.dll",
+        "lib/net461/System.Runtime.CompilerServices.Unsafe.xml",
+        "lib/netcoreapp2.0/System.Runtime.CompilerServices.Unsafe.dll",
+        "lib/netcoreapp2.0/System.Runtime.CompilerServices.Unsafe.xml",
+        "lib/netstandard1.0/System.Runtime.CompilerServices.Unsafe.dll",
+        "lib/netstandard1.0/System.Runtime.CompilerServices.Unsafe.xml",
+        "lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll",
+        "lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.xml",
+        "ref/net461/System.Runtime.CompilerServices.Unsafe.dll",
+        "ref/net461/System.Runtime.CompilerServices.Unsafe.xml",
+        "ref/netstandard1.0/System.Runtime.CompilerServices.Unsafe.dll",
+        "ref/netstandard1.0/System.Runtime.CompilerServices.Unsafe.xml",
+        "ref/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll",
+        "ref/netstandard2.0/System.Runtime.CompilerServices.Unsafe.xml",
+        "system.runtime.compilerservices.unsafe.4.7.1.nupkg.sha512",
+        "system.runtime.compilerservices.unsafe.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
     }
   },
   "projectFileDependencyGroups": {
     "net5.0": [
-      "NetCoreAudio >= 1.6.3"
+      "LitJson >= 0.17.0",
+      "NetCoreAudio >= 1.6.3",
+      "NodaTime >= 3.0.5"
     ]
   },
   "packageFolders": {
@@ -41,11 +135,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "G:\\毕业设计\\三端程序\\SmartMusicNetCoreAudio\\SmartMusicNetCoreAudio.csproj",
+      "projectUniqueName": "G:\\graduationProject\\Program\\SmartMusicNetCoreAudio\\SmartMusicNetCoreAudio.csproj",
       "projectName": "SmartMusicNetCoreAudio",
-      "projectPath": "G:\\毕业设计\\三端程序\\SmartMusicNetCoreAudio\\SmartMusicNetCoreAudio.csproj",
+      "projectPath": "G:\\graduationProject\\Program\\SmartMusicNetCoreAudio\\SmartMusicNetCoreAudio.csproj",
       "packagesPath": "D:\\nuget\\packages",
-      "outputPath": "G:\\毕业设计\\三端程序\\SmartMusicNetCoreAudio\\obj\\",
+      "outputPath": "G:\\graduationProject\\Program\\SmartMusicNetCoreAudio\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -77,9 +171,17 @@
       "net5.0": {
         "targetAlias": "net5.0",
         "dependencies": {
+          "LitJson": {
+            "target": "Package",
+            "version": "[0.17.0, )"
+          },
           "NetCoreAudio": {
             "target": "Package",
             "version": "[1.6.3, )"
+          },
+          "NodaTime": {
+            "target": "Package",
+            "version": "[3.0.5, )"
           }
         },
         "imports": [

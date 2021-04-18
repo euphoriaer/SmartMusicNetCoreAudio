@@ -15,6 +15,15 @@
           "lib/netstandard2.0/Google.Protobuf.dll": {}
         }
       },
+      "LitJson/0.17.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/LitJSON.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/LitJSON.dll": {}
+        }
+      },
       "System.Memory/4.5.3": {
         "type": "package",
         "compile": {
@@ -54,6 +63,24 @@
         "lib/netstandard2.0/Google.Protobuf.dll",
         "lib/netstandard2.0/Google.Protobuf.pdb",
         "lib/netstandard2.0/Google.Protobuf.xml"
+      ]
+    },
+    "LitJson/0.17.0": {
+      "sha512": "yFkykFlK9ohRNOr09OGM4qS5STNvzln0mqewvARlJMIujuBo1BBpTKmcNFi6+Iq69GI3JO9eR12tNepN/caO6Q==",
+      "type": "package",
+      "path": "litjson/0.17.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net20/LitJSON.dll",
+        "lib/net35/LitJSON.dll",
+        "lib/net40/LitJSON.dll",
+        "lib/net45/LitJSON.dll",
+        "lib/netstandard1.5/LitJSON.dll",
+        "lib/netstandard2.0/LitJSON.dll",
+        "litjson.0.17.0.nupkg.sha512",
+        "litjson.nuspec",
+        "litjson.png"
       ]
     },
     "System.Memory/4.5.3": {
@@ -105,7 +132,8 @@
   },
   "projectFileDependencyGroups": {
     "net5.0": [
-      "Google.Protobuf >= 3.15.7"
+      "Google.Protobuf >= 3.15.7",
+      "LitJson >= 0.17.0"
     ]
   },
   "packageFolders": {
@@ -115,11 +143,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "G:\\毕业设计\\三端程序\\SmartMusicServer\\SmartMusicServer.csproj",
+      "projectUniqueName": "G:\\graduationProject\\Program\\SmartMusicServer\\SmartMusicServer.csproj",
       "projectName": "SmartMusicServer",
-      "projectPath": "G:\\毕业设计\\三端程序\\SmartMusicServer\\SmartMusicServer.csproj",
+      "projectPath": "G:\\graduationProject\\Program\\SmartMusicServer\\SmartMusicServer.csproj",
       "packagesPath": "D:\\nuget\\packages",
-      "outputPath": "G:\\毕业设计\\三端程序\\SmartMusicServer\\obj\\",
+      "outputPath": "G:\\graduationProject\\Program\\SmartMusicServer\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -154,6 +182,10 @@
           "Google.Protobuf": {
             "target": "Package",
             "version": "[3.15.7, )"
+          },
+          "LitJson": {
+            "target": "Package",
+            "version": "[0.17.0, )"
           }
         },
         "imports": [

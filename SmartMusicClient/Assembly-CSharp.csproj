@@ -64,6 +64,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\NetWork\ByteArray.cs" />
+    <Compile Include="Assets\NetWork\MsgBase.cs" />
+    <Compile Include="Assets\NetWork\NetManager.cs" />
+    <Compile Include="Assets\NetWork\SysMsg\MsgInstance.cs" />
+    <Compile Include="Assets\NetWork\SysMsg\MsgOrder.cs" />
+    <Compile Include="Assets\NetWork\SysMsg\MsgPing.cs" />
+    <Compile Include="Assets\NetWork\SysMsg\MsgPong.cs" />
     <Compile Include="Assets\SmartMusic.cs" />
     <Reference Include="UnityEngine">
       <HintPath>D:/unity3d/install/2019.4.18f1c1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
@@ -241,6 +248,9 @@
     </Reference>
     <Reference Include="UnityEditor">
       <HintPath>D:/unity3d/install/2019.4.18f1c1/Editor/Data/Managed/UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="LitJSON">
+      <HintPath>G:/graduationProject/Program/SmartMusicClient/Assets/Packages/LitJson.0.17.0/lib/netstandard2.0/LitJSON.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>D:/unity3d/install/2019.4.18f1c1/Editor/Data/NetStandard/ref/2.0.0/netstandard.dll</HintPath>

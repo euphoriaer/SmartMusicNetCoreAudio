@@ -20,7 +20,7 @@ public class SmartMusic : MonoBehaviour
     public Transform root;
 
     [Space]
-    public static string iP;//服务器地址
+    public static string iP = "127.0.0.1";//服务器地址
 
     private static int port = 9910;//服务器端口号
 
@@ -46,6 +46,40 @@ public class SmartMusic : MonoBehaviour
         upMusic.onClick.AddListener(UpMusic);
         connect.onClick.AddListener(ConnectServer);
         socketSend = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+        
+    }
+
+    private void Test()
+    {
+        NetManager.NetConfig("127.0.0.1", 8888);
+        NetManager.Update();
+        NetManager.AddEventListener(NetManager.NetEvent.ConnectSucc, OnConnectSucc);
+        NetManager.AddMsgListener("MsgMoveTest", OnMsgMoveTest);
+        FinishInit();
+    }
+
+    private void OnMsgOrder(MsgBase msgBase)
+    {
+
+        return;
+    }
+
+    private void OnMsgMoveTest(MsgBase msgBase)
+    {
+        
+        //MsgMoveTest msg = msgBase as MsgMoveTest;
+        //Debug.LogError("-------收到移动消息" + msg.id);
+        //CtrlMove syncMove = ConnectManager.FindPlayer(msg.id).GetComponent<CtrlMove>();
+
+        //syncMove.SyncMove(msg.v, msg.h);
+    }
+
+    private void OnConnectSucc(string err)
+    {
+        isConnect = true;//连接成功发送 Ping
+        MsgInstance instance = new MsgInstance("手机客户端");
+        NetManager.Send(instance);
     }
 
     /// <summary>
@@ -59,35 +93,31 @@ public class SmartMusic : MonoBehaviour
 
     private void ConnectServer()
     {
-        if (socketSend == null || socketSend.Connected)
-        {
-            ShowState("服务器已经连接");
-            return;
-        }
-        if (iP == "" || iP == null)
-        {
-            iP = IPAddress.Loopback.ToString();//如果ip为空 则监听本机
-        }
-        else
-        {
-            iP = IPAddress1.text;
-        }
-        IPAddress _iP = IPAddress.Parse(iP);
-        IPEndPoint _point = new IPEndPoint(_iP, port);
-        socketSend.Connect(_point);
-        ShowState("服务器连接");
-        isConnect = true;
+        NetManager.NetConfig("127.0.0.1", 8888);
+        NetManager.AddEventListener(NetManager.NetEvent.ConnectSucc, OnConnectSucc);//加入监听
 
-        //todo 开启线程不停接收消息，客户端暂时可以只发送，不接受
+        NetManager.iPconfig = iP;
+        NetManager.ipPort = 8888;
+        NetManager.Connect(FinishInit);
+    }
+
+    private void FinishInit()
+    {
+    
+        NetManager.AddMsgListener("MsgOrder", OnMsgOrder);
+        NetManager.AddMsgListener("MsgInstance", OnMsgInstance);
+        NetManager.AddMsgListener("MsgTest", OnMsgOrder);
+    }
+
+    private void OnMsgInstance(MsgBase msgBase)
+    {
+        Debug.Log("服务器收到消息id，");
     }
 
     private void UpMusic()
     {
-        if (!isConnect)
-        {
-            ShowState("未连接服务器");
-        }
-        SendMessage("上一曲");
+        MsgOrder msgOrder = new MsgOrder(SmartOrder.UpMusic.ToString());
+        NetManager.Send(msgOrder);
     }
 
     private void DownMusic()
@@ -96,7 +126,8 @@ public class SmartMusic : MonoBehaviour
         {
             ShowState("未连接服务器");
         }
-        SendMessage("下一曲");
+        MsgOrder msgOrder = new MsgOrder(SmartOrder.DownMusic.ToString());
+        NetManager.Send(msgOrder);
     }
 
     private void PauseMusic()
@@ -105,7 +136,8 @@ public class SmartMusic : MonoBehaviour
         {
             ShowState("未连接服务器");
         }
-        SendMessage("暂停");
+        MsgOrder msgOrder = new MsgOrder(SmartOrder.PauseMusic.ToString());
+        NetManager.Send(msgOrder);
     }
 
     private void StopMusic()
@@ -114,7 +146,9 @@ public class SmartMusic : MonoBehaviour
         {
             ShowState("未连接服务器");
         }
-        SendMessage("停止");
+        MsgOrder msgOrder = new MsgOrder(SmartOrder.StopMusic.ToString());
+        NetManager.Send(msgOrder);
+
     }
 
     private void PlayMusic()
@@ -123,23 +157,24 @@ public class SmartMusic : MonoBehaviour
         {
             ShowState("未连接服务器");
         }
-        SendMessage("播放");
+
+
+        MsgOrder msgOrder = new MsgOrder(SmartOrder.PlayMusic.ToString());
+        NetManager.Send(msgOrder);
     }
 
     /// <summary>
     ///  发送消息
     /// </summary>
     /// <param name="msg"></param>
-    public void SendMessage(string msg)
-    {
-        byte[] msgs = System.Text.Encoding.UTF8.GetBytes(msg);//转成字节数组
-                                                              //发送消息
-        socketSend.Send(msgs);
-    }
+   
 
     // Update is called once per frame
     private void Update()
     {
-
+        if (isConnect)
+        {
+            NetManager.Update();
+        }
     }
 }

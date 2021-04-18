@@ -3,13 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Threading;
 
 namespace SmartMusicNetCoreAudio
 {
     internal class Program
     {
-        private static string iP = "127.0.0.1";//服务器地址
-        private static int port = 9910;//服务器端口号
+        private static string iP = IPAddress.Loopback.ToString(); //"127.0.0.1";//服务器地址
+        private static int port = 8888;//服务器端口号
 
         private static string musicPath;
 
@@ -41,14 +42,77 @@ namespace SmartMusicNetCoreAudio
             }
             //192.168.58.131
 
-            Net.ContrentNet(iP, port, "智能音箱1");
+            //Net.ContrentNet(iP, port, "智能音箱1");
+            NetManager.iPconfig = iP;
+            NetManager.ipPort = port;
+            NetManager.NetConfig(iP, port);
+            NetManager.AddEventListener(NetManager.NetEvent.ConnectSucc, ConnectSuccess);
+            
+            NetManager.Connect(FinishInit);
+
             //加入退出事件，通知服务器关闭socket
-            AppDomain.CurrentDomain.ProcessExit += new EventHandler(CurrentDomain_ProcessExit);
+            AppDomain.CurrentDomain.ProcessExit += new System.EventHandler(CurrentDomain_ProcessExit);
 
             FindMusic();
             ShowMenu();
             KeyFind();
         }
+
+        private static void FinishInit()
+        {
+            
+            NetManager.AddMsgListener("MsgInstance", OnMsgInstance);
+            NetManager.AddMsgListener("MsgOrder", OnMsgOrder);
+            Console.WriteLine("监听添加完毕");
+        }
+
+        private static void OnMsgInstance(MsgBase msgBase)
+        {
+            Console.WriteLine("收到协议instance");
+        }
+
+        private static void OnMsgOrder(MsgBase msgBase)
+        {
+            MsgOrder msg= msgBase as MsgOrder;
+
+            Console.WriteLine("收到协议"+ msg.order);
+            //PlayMusic, StopMusic, PauseMusic, DownMusic, UpMusic,
+            switch (msg.order)
+            {
+                case "PlayMusic":
+                    PlayMusic();
+                    break;
+                case "StopMusic":
+                    StopMusic();
+                    break;
+                case "PauseMusic":
+                    PauseMusic();
+                    break;
+                case "DownMusic":
+                    DownMusic();
+                    break;
+                case "UpMusic":
+                    UpMusic();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        
+
+
+        private static void ConnectSuccess(string err)
+        {
+            Console.WriteLine("成功连接服务器");
+           
+            MsgInstance msg = new MsgInstance("嵌入式端");
+            NetManager.Send(msg);
+            //Thread th = new Thread(NetManager.Update);
+            //th.Start();
+           
+        }
+
 
         private static void CurrentDomain_ProcessExit(object sender, EventArgs e)
         {
@@ -90,72 +154,73 @@ namespace SmartMusicNetCoreAudio
 
         public static void KeyFind()
         {
-            Console.WriteLine("开始播放音乐");
+            
 
             while (true)
             {
-                ConsoleKeyInfo info = Console.ReadKey();
-                Console.WriteLine("按下了：" + info.KeyChar);
-                switch (info.Key)
-                {
-                    case ConsoleKey.D1:
-                        Console.WriteLine("播放音乐");
-                        PlayMusic();
-                        break;
+                NetManager.Update();
+                //ConsoleKeyInfo info = Console.ReadKey();
+                //Console.WriteLine("按下了：" + info.KeyChar);
+                //switch (info.Key)
+                //{
+                //    case ConsoleKey.D1:
+                //        Console.WriteLine("播放音乐");
+                //        PlayMusic();
+                //        break;
 
-                    case ConsoleKey.D2:
-                        Console.WriteLine("暂停");
-                        PauseMusic();
-                        break;
+                //    case ConsoleKey.D2:
+                //        Console.WriteLine("暂停");
+                //        PauseMusic();
+                //        break;
 
-                    case ConsoleKey.D3:
-                        Console.WriteLine("停止");
-                        StopMusic();
-                        break;
+                //    case ConsoleKey.D3:
+                //        Console.WriteLine("停止");
+                //        StopMusic();
+                //        break;
 
-                    case ConsoleKey.D4:
-                        Console.WriteLine("上一曲");
-                        UpMusic();
-                        break;
+                //    case ConsoleKey.D4:
+                //        Console.WriteLine("上一曲");
+                //        UpMusic();
+                //        break;
 
-                    case ConsoleKey.D5:
-                        Console.WriteLine("下一曲");
-                        DownMusic();
-                        break;
+                //    case ConsoleKey.D5:
+                //        Console.WriteLine("下一曲");
+                //        DownMusic();
+                //        break;
 
-                    case ConsoleKey.D6:
-                        Console.WriteLine("音乐目录");
-                        ShowMusicMenu();
-                        break;
+                //    case ConsoleKey.D6:
+                //        Console.WriteLine("音乐目录");
+                //        ShowMusicMenu();
+                //        break;
 
-                    case ConsoleKey.D7:
-                        Console.WriteLine("目录");
-                        ShowMenu();
-                        break;
+                //    case ConsoleKey.D7:
+                //        Console.WriteLine("目录");
+                //        ShowMenu();
+                //        break;
 
-                    case ConsoleKey.D0:
-                        Console.WriteLine("退出");
+                //    case ConsoleKey.D0:
+                //        Console.WriteLine("退出");
 
-                        StopMusic();
-                        return;
-                        break;
-                    //case ConsoleKey.DownArrow:
-                    //case ConsoleKey.S:
-                    //    Console.WriteLine("Down");
-                    //    break;
-                    //case ConsoleKey.LeftArrow:
-                    //case ConsoleKey.D:
-                    //    Console.WriteLine("Left");
-                    //    break;
-                    //case ConsoleKey.RightArrow:
-                    //case ConsoleKey.A:
-                    //    Console.WriteLine("Right");
-                    //    break;
-                    default:
-                        Console.WriteLine(info.Key);
-                        Console.WriteLine("按键不对，请选择0-7");
-                        break;
-                }
+                //        StopMusic();
+                //        return;
+                //        break;
+                //    //case ConsoleKey.DownArrow:
+                //    //case ConsoleKey.S:
+                //    //    Console.WriteLine("Down");
+                //    //    break;
+                //    //case ConsoleKey.LeftArrow:
+                //    //case ConsoleKey.D:
+                //    //    Console.WriteLine("Left");
+                //    //    break;
+                //    //case ConsoleKey.RightArrow:
+                //    //case ConsoleKey.A:
+                //    //    Console.WriteLine("Right");
+                //    //    break;
+                //    default:
+                //        Console.WriteLine(info.Key);
+                //        Console.WriteLine("按键不对，请选择0-7");
+                //        break;
+                //}
             }
         }
 

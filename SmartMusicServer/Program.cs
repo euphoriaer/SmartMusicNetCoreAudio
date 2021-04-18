@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -11,9 +10,9 @@ namespace SmartMusicServer
     internal class Program
     {
         private static IPAddress ip = IPAddress.Any;//本机IP，要监听的端口,any监听所有ip,IPAddress.Parse将字符串转为ip
-        private static object port=9910;
+        private static object port = 9910;
         private static readonly int clientsNum = 10;
-        
+
         private static void Main(string[] args)
         {
             Console.WriteLine("Hello SmartMusicServer!");
@@ -24,6 +23,29 @@ namespace SmartMusicServer
             //    ipStr = IPAddress.Loopback.ToString();
             //}
             ////192.168.58.131
+
+            Thread listemThread = new Thread(LisTenNet);
+            listemThread.IsBackground = true;
+            listemThread.Start(8888);//传数据
+            Console.WriteLine("按下0，退出服务器");//使用线程连接
+            while (true)
+            {
+                ConsoleKeyInfo info = Console.ReadKey();
+                //主线程
+                if (info.Key == ConsoleKey.D0)
+                {
+                    return;
+                }
+            }
+        }
+
+        private static void LisTenNet(object port)
+        {
+            NetManager.StarLoop((int)port);
+        }
+
+        private static void MyNewNet()
+        {
             Socket socketWitch = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             IPEndPoint point = new IPEndPoint(ip, Convert.ToInt32(port));
             //监听
@@ -32,23 +54,14 @@ namespace SmartMusicServer
             socketWitch.Listen(clientsNum);//同一时间进入的 socket数量
 
             Thread listemThread = new Thread(Listen);
-            listemThread.IsBackground = true;
-            listemThread.Start(socketWitch);//
-            Console.WriteLine("按下0，退出服务器");//使用线程连接
-          
-            while (true)
-            {
-                ConsoleKeyInfo info = Console.ReadKey();
-                //主线程
-                if (info.Key==ConsoleKey.D0)
-                {
-                    return;
-                }
 
-            }
+            listemThread.IsBackground = true;
+            listemThread.Start(socketWitch);//传数据
         }
+
         // private static Dictionary<string, Socket> clients = new Dictionary<string, Socket>();
         private static List<Socket> clients = new List<Socket>();
+
         //todo 只执行一次，需要写协议，将事件和消息分开，区分发的是消息，还是客户端姓名，必须要姓名，否则不知道消息转发给谁，需要消息头，消息体
         //可以考虑所有消息全部转发，不区分，在不同客户端处理
         //todo 全部转发 用list，选择转发用Dic
@@ -73,7 +86,7 @@ namespace SmartMusicServer
 
                     SendMessage(socketSend, "服务器收到连接");
                     //todo 判断连接状态，是否断开
-                  
+
                     Thread th = new Thread(Receive);
                     th.IsBackground = true;
                     th.Start(socketSend);
@@ -83,10 +96,9 @@ namespace SmartMusicServer
                 }
             }
         }
+
         //负责通信的socket
         private static Socket socketSend;
-       
-
 
         /// <summary>
         /// 当连接成功，为新客户端开启线程
@@ -118,16 +130,14 @@ namespace SmartMusicServer
                     //todo 转发收到的消息
                     foreach (var item in clients)
                     {
-                        Console.WriteLine("发送消息"+item.RemoteEndPoint+str);
+                        Console.WriteLine("发送消息" + item.RemoteEndPoint + str);
                         SendMessage(item, str);//将收到的消息转发给所有客户端，在收到消息的客户端处理逻辑
-
                     }
-                    if (str=="关闭连接")
+                    if (str == "关闭连接")
                     {
                         Console.WriteLine("已关闭");//todo 虚假的关闭，还是要用事件
                         clients.Remove(socketSend);//关闭后 从队列清除
                     }
-
                 }
                 catch (Exception)
                 {
@@ -140,12 +150,11 @@ namespace SmartMusicServer
         /// </summary>
         /// <param name="targetCilent">客户端socket对象</param>
         /// <param name="msg">消息内容</param>
-        public static void SendMessage(Socket targetCilent,string msg)
+        public static void SendMessage(Socket targetCilent, string msg)
         {
             byte[] msgs = System.Text.Encoding.UTF8.GetBytes(msg);//转成字节数组
             //发送消息
             socketSend.Send(msgs);
         }
-
     }
 }
