@@ -39,25 +39,25 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 11260}
+      Script: {instanceID: 11268}
     - Class: 114
-      Script: {instanceID: 11418}
+      Script: {instanceID: 11434}
     - Class: 114
-      Script: {instanceID: 11458}
+      Script: {instanceID: 11474}
     - Class: 114
-      Script: {instanceID: 11510}
+      Script: {instanceID: 11526}
     - Class: 114
-      Script: {instanceID: 11846}
+      Script: {instanceID: 11866}
     - Class: 114
-      Script: {instanceID: 12230}
+      Script: {instanceID: 12260}
     - Class: 114
-      Script: {instanceID: 12418}
+      Script: {instanceID: 12448}
     - Class: 114
-      Script: {instanceID: 12710}
+      Script: {instanceID: 12744}
     - Class: 114
-      Script: {instanceID: 12714}
+      Script: {instanceID: 12748}
     - Class: 114
-      Script: {instanceID: 13062}
+      Script: {instanceID: 13100}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -389,7 +389,7 @@ ScriptsOnlyBuild:
     className: GraphicRaycaster
   - hash:
       serializedVersion: 2
-      Hash: 6e881b6cf21c73f3c4f79b021b64bbce
+      Hash: c80768ca6deef1abfb6ec9998b9c2142
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SmartMusic

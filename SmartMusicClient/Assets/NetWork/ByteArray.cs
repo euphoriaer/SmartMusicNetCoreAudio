@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-public class ByteArray 
+public class ByteArray
 {//默认大小
-    private const int DEFAULT_SIZE = 1024*1024*2;
+    private const int DEFAULT_SIZE = 1024;
 
     //初始大小
     private int initSize = 0;
@@ -21,10 +21,22 @@ public class ByteArray
     private int capacity = 0;
 
     //剩余空间
-    public int remain { get { return capacity - writeIdx; } }
+    public int remain
+    {
+        get
+        {
+            return capacity - writeIdx;
+        }
+    }
 
     //数据长度
-    public int length { get { return writeIdx - readIdx; } }
+    public int length
+    {
+        get
+        {
+            return writeIdx - readIdx;
+        }
+    }
 
     public ByteArray(int size = DEFAULT_SIZE)
     {

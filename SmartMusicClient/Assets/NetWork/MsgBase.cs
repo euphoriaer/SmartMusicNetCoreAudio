@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 
 
-public class MsgBase 
+public class MsgBase
 {
     /// <summary>
     /// 协议名(可以写成构造函数，让子类必须传参数过来)
@@ -57,12 +57,9 @@ public class MsgBase
     /// <returns></returns>
     public static MsgBase Decode(string protoName, byte[] bytes, int offset, int count)
     {
-      
         string s = System.Text.Encoding.UTF8.GetString(bytes, offset, count);
         //MsgBase msgbase = (MsgBase)JsonUtility.FromJson(s, Type.GetType(protoName));
-        MsgBase msgbase = (MsgBase)JsonMapper.ToObject(s, Type.GetType(protoName));//error  使用LitJson进行解码如果 
-                                                                                   //error 使用LitJson进行解码,JsonUtility会解析失败且没有错误提示
-       
+        MsgBase msgbase = (MsgBase)JsonMapper.ToObject(s, Type.GetType(protoName));//error 使用LitJson进行解码,JsonUtility会解析失败且没有错误提示
         return msgbase;
     }
 

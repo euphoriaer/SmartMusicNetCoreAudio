@@ -1,23 +1,16 @@
-﻿using System;
+﻿using System.Runtime.CompilerServices;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using UnityEngine;
 
-/// <summary>
-/// 使用方法：设置ip 设置port 添加update驱动，进行连接
-/// </summary>
 public static class NetManager
 {
-    /// <summary>
-    /// ip
-    /// </summary>
-    public static String iPconfig;
 
-    /// <summary>
-    /// 端口
-    /// </summary>
+    public static String iPconfig;
     public static int ipPort;
+
 
     ///定义套接字
     private static Socket socket;
@@ -77,7 +70,7 @@ public static class NetManager
     /// <summary>
     /// 心跳间隔时间，默认30秒
     /// </summary>
-    public static int pingInterval = 5;
+    public static int pingInterval = 60;
 
     /// <summary>
     /// 上一次发送Ping的时间
@@ -96,10 +89,8 @@ public static class NetManager
     /// <param name="listener"></param>
     public static void AddEventListener(NetEvent netEvent, EventListener listener)
     {
-        if (!eventListeners.ContainsKey(netEvent))
+        if (eventListeners.ContainsKey(netEvent))
         {
-            Debug.LogError("添加事件：" + netEvent.ToString());
-            eventListeners.Add(netEvent, listener);
             eventListeners[netEvent] += listener;
         }
         else
@@ -135,9 +126,7 @@ public static class NetManager
     {
         if (eventListeners.ContainsKey(netEvent))
         {
-            
             eventListeners[netEvent](err);
-           
         }
     }
 
@@ -151,13 +140,10 @@ public static class NetManager
         //添加
         if (msgListeners.ContainsKey(msgName))
         {
-            //msgListeners.Add
-            Debug.LogError("为指定监听添加函数（多播）" + msgName);
             msgListeners[msgName] += listener;
         }
         else
         {
-            Debug.LogError("添加监听" + msgName);
             msgListeners[msgName] = listener;
             //新增
         }
@@ -190,17 +176,13 @@ public static class NetManager
     {
         if (msgListeners.ContainsKey(msgName))
         {
-            Debug.Log("执行委托前");
+           
             msgListeners[msgName](msgBase); //error 理解一下字典后面加（）的传参， 因为字典的 value是委托类型，此处将参数传给此委托。委托执行时，才能根据传进来的参数进行处理
-            Debug.Log("执行委托后");
+
         }
     }
 
-    /// <summary>
-    /// 初始化完成回调，然后再添加监听
-    /// </summary>
-    /// <param name="action"></param>
-    public static void Connect(Action action)
+    public static void Connect(string ip, int port)
     {
         //状态判断
         if (socket != null && socket.Connected)
@@ -216,12 +198,12 @@ public static class NetManager
         }
 
         //初始化成员
-        InitState(action);
+        InitState();
 
         //参数设置
         socket.NoDelay = true;
         isConnecting = true;
-        socket.BeginConnect(iPconfig, ipPort, ConnectCallback, socket);
+        socket.BeginConnect(ip, port, ConnectCallback, socket);
     }
 
     private static void ConnectCallback(IAsyncResult ar)
@@ -231,7 +213,6 @@ public static class NetManager
             Socket socket = (Socket)ar.AsyncState; //可以使用 as 进行强制类型转换
             socket.EndConnect(ar);
             Debug.Log("Socket Connect Success");
-            Debug.Log("分发事件");
             FireEvent(NetEvent.ConnectSucc, "");
             isConnecting = true;
             //开始接收
@@ -272,6 +253,7 @@ public static class NetManager
                 readBuff.ReSize(readBuff.length * 2);
             }
             socket.BeginReceive(readBuff.bytes, readBuff.writeIdx, readBuff.remain, 0, ReceiveCallback, socket); //回调自己，递归
+
         }
         catch (SocketException ex)
         {
@@ -291,7 +273,6 @@ public static class NetManager
         {
             return;
         }
-        Debug.LogError("----------有数据");
         //获取消息体长度
         int readIdx = readBuff.readIdx;
         byte[] bytes = readBuff.bytes;
@@ -340,17 +321,12 @@ public static class NetManager
         MsgUpdate();
         if (socket == null || !socket.Connected)
         {
-            NetManager.Connect(FinishInit); //ip地址 127.0.0.1本地机
+            NetManager.Connect(iPconfig, ipPort); //ip地址 127.0.0.1本地机
             //当连接断开，自动尝试连接 且停止发送ping
             return;
         }
         PingUpdate();
     }
-
-    private static void FinishInit()
-    {
-    }
-
     /// <summary>
     /// 设置要连接的服务器的ip地址和端口
     /// </summary>
@@ -375,19 +351,20 @@ public static class NetManager
         //重复处理消息
         for (int i = 0; i < MAX_MESSAGE_FIRE; i++)
         {
+
             //获取第一条消息
             MsgBase msgBase = null;
             lock (msgList)
             {
                 if (msgList.Count > 0)
                 {
-                    Debug.Log("处理消息");
                     msgBase = msgList[0];
                     msgList.RemoveAt(0);
                     msgCount--;
                     FireMsg(msgBase.protoName, msgBase);
                 }
             }
+
 
             //error 这里会出现无法分发消息的错误，分发消息 消息会空 ，在前面给予消息完毕后 直接分发不再 锁的外面分发消息，为什么会出错，目前不知道，猜测和锁有关
             //if (msgBase != null)
@@ -406,7 +383,7 @@ public static class NetManager
     /// <summary>
     /// 初始化
     /// </summary>
-    private static void InitState(Action action)
+    private static void InitState()
     {
         Debug.Log("初始化");
         //定义socke
@@ -436,16 +413,16 @@ public static class NetManager
         //监听Pong协议
         if (!msgListeners.ContainsKey("MsgPong"))
         {
+
             AddMsgListener("MsgPong", OnMsgPong);
             Debug.Log("MsgPong监听添加");
         }
-        action.Invoke();//添加监听
     }
 
     private static void OnMsgPong(MsgBase msgBase)
     {
-        Debug.Log("收到Pong"); //error 收不到Pong？收不到。。。
         lastPongTime = Time.time;
+        Debug.Log("收到Pong"); //error 收不到Pong？
     }
 
     /// <summary>
@@ -601,7 +578,7 @@ public static class NetManager
         }
     }
 
-    public enum NetEvent //TODO，理解一下：enum可以放在class里，也可以放在class外面，区别就是不同的访问级别
+    public enum NetEvent //TODO，理解一下：enum可以放在class里，也可以放在class外面，区别
     {
         ConnectSucc = 1,
         ConnectFail = 2,
