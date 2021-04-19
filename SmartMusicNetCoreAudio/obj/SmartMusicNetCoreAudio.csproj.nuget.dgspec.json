@@ -50,10 +50,6 @@
             "NetCoreAudio": {
               "target": "Package",
               "version": "[1.6.3, )"
-            },
-            "NodaTime": {
-              "target": "Package",
-              "version": "[3.0.5, )"
             }
           },
           "imports": [

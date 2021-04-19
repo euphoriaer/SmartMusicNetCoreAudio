@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 
 
-public class MsgBase : MonoBehaviour
+public class MsgBase 
 {
     /// <summary>
     /// 协议名(可以写成构造函数，让子类必须传参数过来)

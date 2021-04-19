@@ -1,13 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "KA/opZr0WfQj+OipYKymNmuvHgBYk6MgrkZqLXx+lS7dfhaWjSrmQmnN/dL3ZLcEVDxyRTWWMuhbPklBimC+3g==",
+  "dgSpecHash": "pSOFg//htLQmtKC5MkYAU8eA2Hq6ZlAtjwf86G2fxEN5ATr3cyv9jfmCIWCK7BEEesLZMshqNfg0eeyuX/dr3g==",
   "success": true,
   "projectFilePath": "G:\\graduationProject\\Program\\SmartMusicNetCoreAudio\\SmartMusicNetCoreAudio.csproj",
   "expectedPackageFiles": [
     "D:\\nuget\\packages\\litjson\\0.17.0\\litjson.0.17.0.nupkg.sha512",
-    "D:\\nuget\\packages\\netcoreaudio\\1.6.3\\netcoreaudio.1.6.3.nupkg.sha512",
-    "D:\\nuget\\packages\\nodatime\\3.0.5\\nodatime.3.0.5.nupkg.sha512",
-    "D:\\nuget\\packages\\system.runtime.compilerservices.unsafe\\4.7.1\\system.runtime.compilerservices.unsafe.4.7.1.nupkg.sha512"
+    "D:\\nuget\\packages\\netcoreaudio\\1.6.3\\netcoreaudio.1.6.3.nupkg.sha512"
   ],
   "logs": []
 }

@@ -8,7 +8,7 @@ namespace SmartMusicNetCoreAudio
 {
     internal static class Net
     {
-        private static Socket socketSend = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        public static Socket socketSend = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
         /// <summary>
         /// 网络连接
@@ -18,7 +18,6 @@ namespace SmartMusicNetCoreAudio
         /// <param name="clientName">客户端姓名</param>
         public static void ContrentNet(string ip, int port, String clientName)
         {
-          
             //连接网络
             IPAddress iP = IPAddress.Parse(ip);
             IPEndPoint point = new IPEndPoint(iP, port);
@@ -30,28 +29,31 @@ namespace SmartMusicNetCoreAudio
             Thread th = new Thread(Receive);
             th.IsBackground = true;
             th.Start();
-            //开启接收之后，向服务器发送 客户端姓名，用一个tag表示是否连接
 
-            SendMessage(clientName);//todo 只执行一次，需要写协议，将事件和消息分开，区分发的是消息，还是客户端姓名，必须要姓名，否则不知道消息转发给谁，
-                                    //可以考虑所有消息全部转发，不区分，在不同客户端处理
-                                    //todo 全部转发 用list，选择转发用Dic
+            //开启接收之后，向服务器发送 客户端姓名，用一个tag表示是否连接
+            MsgInstance msg = new MsgInstance(clientName);
+
+            SendMessage(msg, socketSend);//todo 只执行一次，需要写协议，将事件和消息分开，区分发的是消息，还是客户端姓名，必须要姓名，否则不知道消息转发给谁，
+                                         //可以考虑所有消息全部转发，不区分，在不同客户端处理
+                                         //todo 全部转发 用list，选择转发用Dic
         }
 
         /// <summary>
         ///  发送消息
         /// </summary>
         /// <param name="msg"></param>
-        public static void SendMessage(string msg)
+        public static void SendMessage(MsgBase msg, Socket socket)
         {
-            try
-            {
-                byte[] msgs = System.Text.Encoding.UTF8.GetBytes(msg);//转成字节数组
-                                                                      //发送消息
-                socketSend.Send(msgs);
-            }
-            catch (Exception)
-            {
-            }
+            NetManager.Send(msg, socket);
+            //try
+            //{
+            //    byte[] msgs = System.Text.Encoding.UTF8.GetBytes(msg);//转成字节数组
+            //                                                          //发送消息
+            //    socketSend.Send(msgs);
+            //}
+            //catch (Exception)
+            //{
+            //}
         }
 
         public static void Receive()
@@ -65,13 +67,15 @@ namespace SmartMusicNetCoreAudio
 
                     byte[] buffer = new byte[1024 * 1024 * 2];//接收数据的容器
                     int r = socketSend.Receive(buffer);//将一次数据放图buffer缓冲区
-                    if (r == 0)
-                    {
-                        break;
-                    }
+
                     string s = Encoding.UTF8.GetString(buffer, 0, r);
                     Console.WriteLine("收到了服务器消息：" + s);
-                    Function(s);
+
+                    ByteArray byteArray = new ByteArray(buffer);
+                    MsgBase msg = NetManager.OnReceiveData(byteArray);
+                    MsgOrder order = msg as MsgOrder;
+                    Console.WriteLine("收到命令：" + order.order);
+                    Function(order.order);
                 }
                 catch (Exception)
                 {
@@ -80,32 +84,32 @@ namespace SmartMusicNetCoreAudio
         }
 
         private static void Function(string str)
-        {
-            if (str == "播放")
+        {//PlayMusic, StopMusic, PauseMusic, DownMusic, UpMusic,
+            if (str == "PlayMusic")
             {
-                Console.WriteLine("服务器：播放");
                 Program.PlayMusic();
             }
-            else if (str == "暂停")
+            else if (str == "PauseMusic")
             {
-                Console.WriteLine("服务器：暂停");
                 Program.PauseMusic();
             }
-            else if(str == "上一曲")
+            else if (str == "UpMusic")
             {
-                Console.WriteLine("服务器：上一曲");
                 Program.UpMusic();
             }
-            else if(str == "下一曲")
+            else if (str == "DownMusic")
             {
-                Console.WriteLine("服务器：下一曲");
                 Program.DownMusic();
             }
-            else if(str == "停止")
+            else if (str == "StopMusic")
             {
-                Console.WriteLine("服务器：停止");
                 Program.StopMusic();
             }
+            else if(str == "MusicList")
+            {
+                Program.ShowMusicMenu();
+            }
+
             return;
         }
 

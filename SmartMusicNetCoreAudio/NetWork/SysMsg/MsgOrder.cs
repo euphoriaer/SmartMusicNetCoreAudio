@@ -1,8 +1,6 @@
-﻿using System;
-
-public class MsgOrder : MsgBase
+﻿public class MsgOrder : MsgBase
 {
-    public MsgOrder(String order) : base("MsgOrder")
+    public MsgOrder(string order) : base("MsgOrder")
     {
         this.order = order;
     }
@@ -14,6 +12,13 @@ public class MsgOrder : MsgBase
     /// 命令客户端发，服务器转发
     /// </summary>
     public string order;
+}
+
+public class MsgTest : MsgBase
+{
+    public MsgTest() : base("MsgTest")
+    {
+    }
 }
 
 public enum SmartOrder

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class ByteArray : MonoBehaviour
+public class ByteArray 
 {//默认大小
     private const int DEFAULT_SIZE = 1024*1024*2;
 

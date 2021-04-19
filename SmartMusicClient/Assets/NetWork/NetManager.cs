@@ -77,7 +77,7 @@ public static class NetManager
     /// <summary>
     /// 心跳间隔时间，默认30秒
     /// </summary>
-    public static int pingInterval = 30;
+    public static int pingInterval = 5;
 
     /// <summary>
     /// 上一次发送Ping的时间
@@ -96,8 +96,10 @@ public static class NetManager
     /// <param name="listener"></param>
     public static void AddEventListener(NetEvent netEvent, EventListener listener)
     {
-        if (eventListeners.ContainsKey(netEvent))
+        if (!eventListeners.ContainsKey(netEvent))
         {
+            Debug.LogError("添加事件：" + netEvent.ToString());
+            eventListeners.Add(netEvent, listener);
             eventListeners[netEvent] += listener;
         }
         else
@@ -133,7 +135,9 @@ public static class NetManager
     {
         if (eventListeners.ContainsKey(netEvent))
         {
+            
             eventListeners[netEvent](err);
+           
         }
     }
 
@@ -227,6 +231,7 @@ public static class NetManager
             Socket socket = (Socket)ar.AsyncState; //可以使用 as 进行强制类型转换
             socket.EndConnect(ar);
             Debug.Log("Socket Connect Success");
+            Debug.Log("分发事件");
             FireEvent(NetEvent.ConnectSucc, "");
             isConnecting = true;
             //开始接收
@@ -249,7 +254,6 @@ public static class NetManager
     {
         try
         {
-
             Socket socket = (Socket)ar.AsyncState;
             //获取接收数据长度
             int count = socket.EndReceive(ar);
@@ -282,12 +286,12 @@ public static class NetManager
     /// </summary>
     public static void OnReceiveData()
     {
-
         //消息长度
         if (readBuff.length <= 2)
         {
             return;
         }
+        Debug.LogError("----------有数据");
         //获取消息体长度
         int readIdx = readBuff.readIdx;
         byte[] bytes = readBuff.bytes;
@@ -319,7 +323,6 @@ public static class NetManager
         lock (msgList)
         {
             msgList.Add(msgBase);
-
         }
         msgCount++;
         //继续读取消息
@@ -441,7 +444,7 @@ public static class NetManager
 
     private static void OnMsgPong(MsgBase msgBase)
     {
-        Debug.Log("收到Pong"); //error 收不到Pong？
+        Debug.Log("收到Pong"); //error 收不到Pong？收不到。。。
         lastPongTime = Time.time;
     }
 

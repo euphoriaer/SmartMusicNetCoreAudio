@@ -8,7 +8,7 @@ public class MsgInstance : MsgBase
     }
     public MsgInstance() : base("MsgInstance")
     {
-        this.id = id;
+       
     }
     //public Player player;
 

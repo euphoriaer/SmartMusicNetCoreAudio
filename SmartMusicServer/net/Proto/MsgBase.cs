@@ -45,7 +45,7 @@ public class MsgBase
 
             if (protoName != null)
             {
-                MsgBase msgbase = (MsgBase)JsonMapper.ToObject(s, Type.GetType(protoName));//使用LitJson进行解码 并返回对应类型
+                MsgBase msgbase = (MsgBase)JsonMapper.ToObject(s, Type.GetType(protoName));//todo 使用LitJson进行解码 并返回对应类型
 
                 return msgbase;
             }

@@ -25,7 +25,6 @@ G:\graduationProject\Program\SmartMusicNetCoreAudio\bin\Debug\net5.0\ref\SmartMu
 G:\graduationProject\Program\SmartMusicNetCoreAudio\bin\Debug\net5.0\SmartMusicNetCoreAudio.pdb
 G:\graduationProject\Program\SmartMusicNetCoreAudio\bin\Debug\net5.0\LitJSON.dll
 G:\graduationProject\Program\SmartMusicNetCoreAudio\bin\Debug\net5.0\NetCoreAudio.dll
-G:\graduationProject\Program\SmartMusicNetCoreAudio\bin\Debug\net5.0\NodaTime.dll
 G:\graduationProject\Program\SmartMusicNetCoreAudio\obj\Debug\net5.0\SmartMusicNetCoreAudio.csprojAssemblyReference.cache
 G:\graduationProject\Program\SmartMusicNetCoreAudio\obj\Debug\net5.0\SmartMusicNetCoreAudio.GeneratedMSBuildEditorConfig.editorconfig
 G:\graduationProject\Program\SmartMusicNetCoreAudio\obj\Debug\net5.0\SmartMusicNetCoreAudio.AssemblyInfoInputs.cache

@@ -12,7 +12,9 @@ public partial class MsgHandler
 
             if (ConnectManager.entity.ContainsKey(msgInstance.id))
             {
-                Console.WriteLine("[服务器]:要添加的对象已经存在");
+                Console.WriteLine("[服务器]:要添加的对象已经存在:重置");
+
+                ConnectManager.entity[msgInstance.id] = c;
             }
             else
             {

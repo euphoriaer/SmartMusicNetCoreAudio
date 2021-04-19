@@ -23,5 +23,5 @@ public class MsgTest : MsgBase
 
 public enum SmartOrder
 {
-    PlayMusic, StopMusic, PauseMusic, DownMusic, UpMusic,
+    PlayMusic, StopMusic, PauseMusic, DownMusic, UpMusic, MusicList
 }

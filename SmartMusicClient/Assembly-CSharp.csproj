@@ -68,6 +68,7 @@
     <Compile Include="Assets\NetWork\MsgBase.cs" />
     <Compile Include="Assets\NetWork\NetManager.cs" />
     <Compile Include="Assets\NetWork\SysMsg\MsgInstance.cs" />
+    <Compile Include="Assets\NetWork\SysMsg\MsgMusicMenu.cs" />
     <Compile Include="Assets\NetWork\SysMsg\MsgOrder.cs" />
     <Compile Include="Assets\NetWork\SysMsg\MsgPing.cs" />
     <Compile Include="Assets\NetWork\SysMsg\MsgPong.cs" />
