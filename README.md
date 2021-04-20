@@ -8,7 +8,7 @@ SmartMusicNetCoreAudio 是嵌入式端程序，需要系统安装 .NET 5.0 及�
 ## 服务器端
 同理，服务器安装 .NET 框架，运行程序 dotnet run（记得开启端口 8888）
 ## 客户端
-使用unity 可以打包适合自己的客户端（windows app）启动后连接服务器地址即可
+使用unity 可以打包适合自己的客户端（windows Android Mac）启动后连接服务器地址即可
 
 # 注意事项
 三端皆为C#制作，使用LitJson组装网络协议，注释详细，可以作为网络入门。
