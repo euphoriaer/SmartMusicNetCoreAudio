@@ -83,9 +83,24 @@ namespace SmartMusicNetCoreAudio
                 Console.WriteLine(String.Format("--------{0}{1}", nameNum, item));
                 nameNum++;
             }
-
+            msg.currMusicNnmber = currtMusicInt;
             NetManager.Send(msg, Net.socketSend);
-            
+           
+
+        }
+
+        private static void SendCurrentMusic()
+        {
+           
+            MsgMusicMenu msg = new MsgMusicMenu();
+            foreach (var item in musicName)
+            {
+                msg.musicNames.names.Add(item);
+                
+               
+            }
+            msg.currMusicNnmber = currtMusicInt;
+            NetManager.Send(msg, Net.socketSend);
         }
 
         public static void ShowMenu()
@@ -229,8 +244,8 @@ namespace SmartMusicNetCoreAudio
                 currtMusic = musicListPath[index];
 
                 priPlaymusic(currtMusic);
-            
-            
+            SendCurrentMusic();
+
         }
 
         /// <summary>
@@ -238,7 +253,6 @@ namespace SmartMusicNetCoreAudio
         /// </summary>
         public static void UpMusic()
         {
-            
                 player.Stop();
 
                 //获得当前选中项,且往上
@@ -252,6 +266,7 @@ namespace SmartMusicNetCoreAudio
                 currtMusicInt = index;//选中索引 往上
                 currtMusic = musicListPath[index];
                 priPlaymusic(currtMusic);
+                SendCurrentMusic();
             
         }
 

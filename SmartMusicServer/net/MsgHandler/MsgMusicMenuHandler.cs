@@ -14,6 +14,7 @@ public partial class MsgHandler
             {
                 msg2.musicNames.names.Add(item);
             }
+            msg2.currMusicNnmber = msg.currMusicNnmber;
             if (ConnectManager.entity.ContainsKey("手机客户端"))
             {
                 NetManager.Send(ConnectManager.entity["手机客户端"], msg2);
