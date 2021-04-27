@@ -11,6 +11,10 @@ public class MsgMusicMenu : MsgBase
     {
         musicNames = new MusicMenu();
     }
+    /// <summary>
+    /// 当前播放音乐
+    /// </summary>
+    public int currMusicNnmber;
 
     /// <summary>
     /// 命令客户端发，服务器转发

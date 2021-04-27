@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,12 +12,17 @@ public class SmartMusic : MonoBehaviour
     public Button connect;
     public Button downMusic;
     public InputField IPAddress1;
-    public Text musicList;
+    public GameObject MusicList;
     public Button MusicListbtn;
+    public GameObject musicListConnect;
     public Text MusicState;
     public Button pause;
+    public GameObject pictureMusic;
     public Button play;
     public Transform root;
+    public Slider Volume;
+    [Header("旋转速度")]
+    public float speed = 20;
 
     public Button stop;
     public Button upMusic;
@@ -25,6 +31,53 @@ public class SmartMusic : MonoBehaviour
     private bool isConnect = false;
 
     //服务器地址
+
+    private bool isRotate = false;
+
+    private List<GameObject> lineMusic = new List<GameObject>();
+
+    public void AddNewLineMusic(string content)
+    {
+        //GameObject con = new GameObject(content, typeof(Text));//创建新的
+        GameObject con = Instantiate(musicListConnect, MusicList.transform, false);//实例化对象,设置父物体且不缩放
+        con.name = content;
+        Debug.Log("实例化对象" + con.name);
+
+        Text cont = con.GetComponent<Text>();
+        cont.text = content;//设置内容
+
+        lineMusic.Add(con);//加入到容器中
+    }
+
+    public void OnConnectSucc(string err)
+    {
+        isConnect = true;
+        //NetManager.NetConfig("127.0.0.1", 8888);
+        ////NetManager.Update();
+        //FinishInit();
+        //NetManager.AddEventListener(NetManager.NetEvent.ConnectSucc, OnConnectSucc);
+        //NetManager.AddMsgListener("MsgInstance", OnMsgInstance);
+        ////NetManager.AddMsgListener("MsgMove", OnMsgMove);
+        //NetManager.AddMsgListener("MsgMoveTest", OnMsgMoveTest);
+
+        MsgInstance instance = new MsgInstance("手机客户端");
+        NetManager.Send(instance);
+
+        Debug.Log("发送id：手机客户端");
+        //string m = "服务器连接成功";
+        //todo ShowState(""); 委托会阻塞线程，收不到任何消息，且无任何报错，用lambda表达式可解决？不可。。。
+
+        //Debug.Log("发送id：手机客户端3");
+    }
+
+    /// <summary>
+    /// 音乐状态显示
+    /// </summary>
+    /// <param name="message"></param>
+    public void ShowState(String message)
+    {
+        MusicState.text = message;
+    }
 
     private void ConnectServer()
     {
@@ -62,27 +115,6 @@ public class SmartMusic : MonoBehaviour
         NetManager.Send(msg);
     }
 
-    public void OnConnectSucc(string err)
-    {
-        isConnect = true;
-        //NetManager.NetConfig("127.0.0.1", 8888);
-        ////NetManager.Update();
-        //FinishInit();
-        //NetManager.AddEventListener(NetManager.NetEvent.ConnectSucc, OnConnectSucc);
-        //NetManager.AddMsgListener("MsgInstance", OnMsgInstance);
-        ////NetManager.AddMsgListener("MsgMove", OnMsgMove);
-        //NetManager.AddMsgListener("MsgMoveTest", OnMsgMoveTest);
-
-        MsgInstance instance = new MsgInstance("手机客户端");
-        NetManager.Send(instance);
-
-        Debug.Log("发送id：手机客户端");
-        //string m = "服务器连接成功";
-        //todo ShowState(""); 委托会阻塞线程，收不到任何消息，且无任何报错，用lambda表达式可解决？不可。。。
-
-        //Debug.Log("发送id：手机客户端3");
-    }
-
     private void OnMsgInstance(MsgBase msgBase)
     {
         Debug.Log("服务器收到消息id，");
@@ -93,12 +125,30 @@ public class SmartMusic : MonoBehaviour
         Debug.Log("收到音乐目录");
         MsgMusicMenu msg = msgBase as MsgMusicMenu;
         StringBuilder musicList = new StringBuilder();
-        foreach (var item in msg.musicNames.names)
+
+        if (lineMusic.Count != 0)//=0说明没有获取目录
         {
-            musicList.AppendLine(item);
+            //
+            Debug.Log("将未播放的置黑");
+            foreach (var item in lineMusic)
+            {
+                //设置颜色,将未播放的音乐置黑
+                item.GetComponent<Text>().color = Color.black;
+            }
+        }
+        else
+        {
+            foreach (var item in msg.musicNames.names)
+            {
+                AddNewLineMusic(item);
+            }
         }
 
-        this.musicList.text = musicList.ToString();
+        Debug.Log("当前播放的音乐为：" + msg.currMusicNnmber + lineMusic[msg.currMusicNnmber].name);
+
+        //设置颜色
+        Text currText = lineMusic[msg.currMusicNnmber].GetComponent<Text>();
+        currText.color = Color.red;
     }
 
     private void OnMsgOrder(MsgBase msgBase)
@@ -108,23 +158,16 @@ public class SmartMusic : MonoBehaviour
 
     private void PauseMusic()
     {
+        isRotate = false;
         MsgOrder msgOrder = new MsgOrder(SmartOrder.PauseMusic.ToString());
         NetManager.Send(msgOrder);
     }
 
     private void PlayMusic()
     {
+        isRotate = true;
         MsgOrder msgOrder = new MsgOrder(SmartOrder.PlayMusic.ToString());
         NetManager.Send(msgOrder);
-    }
-
-    /// <summary>
-    /// 音乐状态显示
-    /// </summary>
-    /// <param name="message"></param>
-    public void ShowState(String message)
-    {
-        MusicState.text = message;
     }
 
     //服务器端口号
@@ -140,10 +183,14 @@ public class SmartMusic : MonoBehaviour
         connect = root.Find("Connect").GetComponent<Button>();
         MusicState = root.Find("MusicState").GetComponent<Text>();
         IPAddress1 = root.Find("IPAddress").GetComponent<InputField>();
-        musicList = root.Find("MusicList/Text").GetComponent<Text>();
-        MusicListbtn = root.Find("MusicListBtn").GetComponent<Button>();
-        musicList.text = "";
 
+        MusicList = root.Find("MusicList").GetComponent<Transform>().gameObject;
+
+        musicListConnect = root.Find("MusicList/MusicListConrent").GetComponent<Transform>().gameObject;
+
+        MusicListbtn = root.Find("MusicListBtn").GetComponent<Button>();
+        Volume = root.Find("Volume").GetComponent<Slider>();
+        pictureMusic = root.Find("PictureMusic").GetComponent<Transform>().gameObject;
         play.onClick.AddListener(PlayMusic);
         stop.onClick.AddListener(StopMusic);
         pause.onClick.AddListener(PauseMusic);
@@ -155,16 +202,26 @@ public class SmartMusic : MonoBehaviour
 
     private void StopMusic()
     {
+        isRotate = false;
         MsgOrder msgOrder = new MsgOrder(SmartOrder.StopMusic.ToString());
         NetManager.Send(msgOrder);
     }
-
+    private float currentVolume = 0;
     // Update is called once per frame
     private void Update()
     {
         if (isConnect)
         {
             NetManager.Update();
+        }
+        if (isRotate)
+        {
+            pictureMusic.transform.Rotate(Vector3.forward, speed);
+        }
+        //如果 音量发生变化 就发送消息
+        if (currentVolume!=Volume.value)
+        {
+            //发送音量协议
         }
     }
 
