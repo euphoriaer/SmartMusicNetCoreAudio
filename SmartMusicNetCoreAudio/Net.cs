@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 
 namespace SmartMusicNetCoreAudio
 {
-    internal static class Net
+    public static class Net
     {
         public static Socket socketSend = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -73,9 +74,25 @@ namespace SmartMusicNetCoreAudio
 
                     ByteArray byteArray = new ByteArray(buffer);
                     MsgBase msg = NetManager.OnReceiveData(byteArray);
-                    MsgOrder order = msg as MsgOrder;
-                    Console.WriteLine("收到命令：" + order.order);
-                    Function(order.order);
+
+                    //todo 利用 msg 的name 进行不同类型的转换
+
+                    MethodInfo mi = typeof(MsgHandler).GetMethod(msg.protoName);//通过反射调用 静态方法
+
+                    object[] o = {msg};
+                    // error Console.WriteLine("[服务器]Receive：" + protoName);
+                    if (mi != null)
+                    {
+                        mi.Invoke(null, o); //error 服务端结合反射，进行了函数调用且传参，客户端根据委托，利用字典进行调用（执行委托）且传参
+                    }
+                    else
+                    {
+                        Console.WriteLine("反射的消息为空:"+msg.protoName);
+                    }
+
+
+                    //Console.WriteLine("收到命令：" + order.order);
+                    //Function(order.order);
                 }
                 catch (Exception)
                 {
@@ -83,35 +100,38 @@ namespace SmartMusicNetCoreAudio
             }
         }
 
-        private static void Function(string str)
-        {//PlayMusic, StopMusic, PauseMusic, DownMusic, UpMusic,
-            if (str == "PlayMusic")
-            {
-                Program.PlayMusic();
-            }
-            else if (str == "PauseMusic")
-            {
-                Program.PauseMusic();
-            }
-            else if (str == "UpMusic")
-            {
-                Program.UpMusic();
-            }
-            else if (str == "DownMusic")
-            {
-                Program.DownMusic();
-            }
-            else if (str == "StopMusic")
-            {
-                Program.StopMusic();
-            }
-            else if(str == "MusicList")
-            {
-                Program.ShowMusicMenu();
-            }
+        //private static void Function(string str)
+        //{//PlayMusic, StopMusic, PauseMusic, DownMusic, UpMusic,
+        //    if (str == "PlayMusic")
+        //    {
+        //        Program.PlayMusic();
+        //    }
+        //    else if (str == "PauseMusic")
+        //    {
+        //        Program.PauseMusic();
+        //    }
+        //    else if (str == "UpMusic")
+        //    {
+        //        Program.UpMusic();
+        //    }
+        //    else if (str == "DownMusic")
+        //    {
+        //        Program.DownMusic();
+        //    }
+        //    else if (str == "StopMusic")
+        //    {
+        //        Program.StopMusic();
+        //    }
+        //    else if(str == "MusicList")
+        //    {
+        //        Program.ShowMusicMenu();
+        //    }
+        //    else
+        //    {
 
-            return;
-        }
+        //    }
+        //    return;
+        //}
 
         public static void Close()
         {

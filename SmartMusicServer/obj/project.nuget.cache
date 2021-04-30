@@ -1,13 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "zMvBVJSXOS3k6XCXcTo3duaCrGie3CYuN7kqU5atCRfwoh/bOiBlyi+PWd187n3ZOceckT3SIcMXutBMuKK18A==",
+  "dgSpecHash": "Rd+oEkIlCrl5P/3MR00+GbAIwRnsjF8vSDxv0gcb25VVMyUzVlRrrZL/ddh032tKgtQyNX8O85HzVtFW39iisQ==",
   "success": true,
   "projectFilePath": "G:\\graduationProject\\Program\\SmartMusicServer\\SmartMusicServer.csproj",
   "expectedPackageFiles": [
-    "D:\\nuget\\packages\\google.protobuf\\3.15.7\\google.protobuf.3.15.7.nupkg.sha512",
-    "D:\\nuget\\packages\\litjson\\0.17.0\\litjson.0.17.0.nupkg.sha512",
-    "D:\\nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512",
-    "D:\\nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.2\\system.runtime.compilerservices.unsafe.4.5.2.nupkg.sha512"
+    "C:\\Users\\17641\\.nuget\\packages\\google.protobuf\\3.15.7\\google.protobuf.3.15.7.nupkg.sha512",
+    "C:\\Users\\17641\\.nuget\\packages\\litjson\\0.17.0\\litjson.0.17.0.nupkg.sha512",
+    "C:\\Users\\17641\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512",
+    "C:\\Users\\17641\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.2\\system.runtime.compilerservices.unsafe.4.5.2.nupkg.sha512"
   ],
   "logs": []
 }

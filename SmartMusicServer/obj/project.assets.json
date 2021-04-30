@@ -137,7 +137,7 @@
     ]
   },
   "packageFolders": {
-    "D:\\nuget\\packages": {},
+    "C:\\Users\\17641\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
@@ -146,7 +146,7 @@
       "projectUniqueName": "G:\\graduationProject\\Program\\SmartMusicServer\\SmartMusicServer.csproj",
       "projectName": "SmartMusicServer",
       "projectPath": "G:\\graduationProject\\Program\\SmartMusicServer\\SmartMusicServer.csproj",
-      "packagesPath": "D:\\nuget\\packages",
+      "packagesPath": "C:\\Users\\17641\\.nuget\\packages\\",
       "outputPath": "G:\\graduationProject\\Program\\SmartMusicServer\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
