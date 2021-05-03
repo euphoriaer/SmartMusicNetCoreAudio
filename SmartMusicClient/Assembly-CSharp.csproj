@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{40CCF2C7-2A0E-319F-9BA6-E9479C8110CE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -65,11 +64,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\NetWork\SysMsg\MsgAudio.cs" />
     <Compile Include="Assets\NetWork\ByteArray.cs" />
     <Compile Include="Assets\NetWork\MsgBase.cs" />
     <Compile Include="Assets\NetWork\NetManager.cs" />
     <Compile Include="Assets\NetWork\SmartMusic.cs" />
+    <Compile Include="Assets\NetWork\SysMsg\MsgAudio.cs" />
     <Compile Include="Assets\NetWork\SysMsg\MsgInstance.cs" />
     <Compile Include="Assets\NetWork\SysMsg\MsgMusicMenu.cs" />
     <Compile Include="Assets\NetWork\SysMsg\MsgOrder.cs" />
@@ -628,8 +627,7 @@
       <HintPath>G:/graduationProject/Program/SmartMusicClient/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-  </ItemGroup>
+  <ItemGroup></ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

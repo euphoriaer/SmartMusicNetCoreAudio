@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Fiodar Sazanavets</Authors>
+    <Company>Mobile Tech Tracker</Company>
+    <Title>NetCoreAudio</Title>
+    <Description>This NuGet package enables audio playback on ASP.NET Core. It is compatible with any operating system supported by .NET Core. The package doesn't require any additional dependencies.</Description>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageProjectUrl>http://mobiletechtracker.co.uk/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mobiletechtracker/NetCoreAudio</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageTags>.NET Core audio</PackageTags>
+    <Version>1.6.3</Version>
+    <PackageIconUrl></PackageIconUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageIcon>icon.jpg</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="icon.jpg">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

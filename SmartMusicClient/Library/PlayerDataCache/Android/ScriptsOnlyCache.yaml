@@ -17,6 +17,7 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.GridLayoutGroup
     - UnityEngine.UI.Image
     - UnityEngine.UI.InputField
+    - UnityEngine.UI.Slider
     - UnityEngine.UI.Text
   sceneClasses:
     Assets/Scenes/SampleScene.unity:
@@ -34,30 +35,34 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 81
       Script: {instanceID: 0}
+    - Class: 89
+      Script: {instanceID: 0}
     - Class: 104
       Script: {instanceID: 0}
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 11268}
+      Script: {instanceID: 11328}
     - Class: 114
-      Script: {instanceID: 11434}
+      Script: {instanceID: 11494}
     - Class: 114
-      Script: {instanceID: 11474}
+      Script: {instanceID: 11534}
     - Class: 114
-      Script: {instanceID: 11526}
+      Script: {instanceID: 11586}
     - Class: 114
-      Script: {instanceID: 11866}
+      Script: {instanceID: 11926}
     - Class: 114
-      Script: {instanceID: 12260}
+      Script: {instanceID: 12324}
     - Class: 114
-      Script: {instanceID: 12448}
+      Script: {instanceID: 12514}
     - Class: 114
-      Script: {instanceID: 12744}
+      Script: {instanceID: 12810}
     - Class: 114
-      Script: {instanceID: 12748}
+      Script: {instanceID: 12814}
     - Class: 114
-      Script: {instanceID: 13100}
+      Script: {instanceID: 13166}
+    - Class: 114
+      Script: {instanceID: 13198}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -257,7 +262,7 @@ ScriptsOnlyBuild:
     className: ControlPlayableAsset
   - hash:
       serializedVersion: 2
-      Hash: 5cc439bf63c0539d39588e69465ac2ab
+      Hash: fd68d84f33fad85aac38f2739c0ee270
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TMP_SpriteAsset
@@ -323,7 +328,7 @@ ScriptsOnlyBuild:
     className: VerticalLayoutGroup
   - hash:
       serializedVersion: 2
-      Hash: 783f593b9380cf72d0f7ebfd4a0d4bcd
+      Hash: f64fd37da5cb89243ec68b5026d70bb8
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: InputField
@@ -341,7 +346,7 @@ ScriptsOnlyBuild:
     className: HorizontalLayoutGroup
   - hash:
       serializedVersion: 2
-      Hash: 344a8c2e106a0a4e098e91a52e0af063
+      Hash: 300fd99066f8c288e85f5e81ce65fe34
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TMP_FontAsset
@@ -389,7 +394,7 @@ ScriptsOnlyBuild:
     className: GraphicRaycaster
   - hash:
       serializedVersion: 2
-      Hash: c80768ca6deef1abfb6ec9998b9c2142
+      Hash: 31da7332d9ffd894ccd8c7102ee19595
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SmartMusic
@@ -407,13 +412,13 @@ ScriptsOnlyBuild:
     className: MarkerTrack
   - hash:
       serializedVersion: 2
-      Hash: d791aa6007fa3640be1164ea75bb087d
+      Hash: 800c50acba124432abb4cf0d47202e06
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TMP_StyleSheet
   - hash:
       serializedVersion: 2
-      Hash: 8cd1cbba27f3cb1717254f668e9e0d5a
+      Hash: 8f15c253902ff4eef507927669b9dc80
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TextMeshPro
