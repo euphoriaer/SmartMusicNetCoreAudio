@@ -225,10 +225,11 @@ public class SmartMusic : MonoBehaviour
         //如果 音量发生变化且计时结束 就发送消息
         if (Mathf.Abs(currentVolume-Volume.value)>=0.1&&time>=timeall)//todo 小技巧 不要用float进行 == 判定，误差
         {
-            currentVolume = Volume.value;
-            Debug.Log("现在的音量为：" + currentVolume*100);
+            currentVolume = Volume.value;//
+            int curVolume = (int)(Volume.value * 100);
+            Debug.Log("现在的音量为：" + curVolume);
             MsgAudio msg = new MsgAudio();
-            msg.audio = Volume.value*100;
+            msg.audio = curVolume;
             NetManager.Send(msg);
             time = 0;
 

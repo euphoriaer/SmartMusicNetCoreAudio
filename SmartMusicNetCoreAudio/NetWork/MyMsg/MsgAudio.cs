@@ -10,5 +10,5 @@
     /// <summary>
     /// 声音大小0-1
     /// </summary>
-    public float audio;
+    public int audio;
 }

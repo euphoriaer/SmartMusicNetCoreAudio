@@ -11,7 +11,7 @@ namespace SmartMusicNetCoreAudio
     {
         private static string iP = "127.0.0.1";//服务器地址
         private static int port = 8888;//服务器端口号
-        private static string AudioProcessCommand = "amixer -M set PCM {0}";
+        private static string AudioProcessCommand = "pactl -- set-sink-volume 1 {0}%";
         private static string musicPath;
 
         /// <summary>
@@ -374,9 +374,10 @@ namespace SmartMusicNetCoreAudio
             
             if (player.Playing)
             {
-                Console.WriteLine("当前音量为" + audioNum);
+                
                 //error 修改声音
                 string cmd = string.Format(AudioProcessCommand, audioNum);
+                Console.WriteLine(cmd);
                 var tempProcess = StartBashProcess(cmd);
                 //tempProcess.WaitForExit();
                 //player.Audio = audioNum;
