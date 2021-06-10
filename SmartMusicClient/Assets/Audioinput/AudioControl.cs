@@ -1,5 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -12,11 +15,14 @@ public class AudioControl : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 {
     //百度语音识别相关key
     //string appId = "";
-   public string apiKey = "";              //填写自己的apiKey
+    public string appID = "";
+    public string apiKey = "";              //填写自己的apiKey
     public string secretKey = "";         //填写自己的secretKey
+    public Text logText;
+    private string logString="";
 
     //记录accesstoken令牌
-    public string accessToken = string.Empty;
+    private string accessToken = string.Empty;
 
     //语音识别的结果
     public string asrResult = string.Empty;
@@ -28,17 +34,17 @@ public class AudioControl : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     public string currentDeviceName = string.Empty;
 
     //录音频率,控制录音质量(8000,16000)
-    public int recordFrequency = 8000;
+    public int recordFrequency = 15000;
 
     //上次按下时间戳
-    public double lastPressTimestamp = 0;
+    private double lastPressTimestamp = 0;
 
     //表示录音的最大时长
-    public int recordMaxLength = 10;
+    private int recordMaxLength = 100;
 
     //实际录音长度(由于unity的录音需先指定长度,导致识别上传时候会上传多余的无效字节)
     //通过该字段,获取有效录音长度,上传时候剪切到无效的字节数据即可
-    public int trueLength = 10;
+    private int trueLength = 100;
 
     //存储录音的片段
     [HideInInspector]
@@ -55,17 +61,30 @@ public class AudioControl : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     void Start()
     {
+        Debug.Log("获取麦克风");
         //获取麦克风设备，判断是否有麦克风设备
         if (Microphone.devices.Length > 0)
         {
             isHaveMic = true;
             currentDeviceName = Microphone.devices[0];
         }
+        else
+        {
+            Debug.LogError("没有获取麦克风");
+        }
 
         //获取相关组件
         textBtn = this.transform.GetChild(0).GetComponent<Text>();
         audioSource = this.GetComponent<AudioSource>();
         textResult = this.transform.parent.GetChild(1).GetComponent<Text>();
+     
+
+    }
+    private StringBuilder buildString;
+    private void LogBox(string message)
+    {
+        buildString.AppendLine(message);
+        logText.GetComponent<Text>().text = buildString.ToString();
     }
 
     /// <summary>
@@ -77,6 +96,7 @@ public class AudioControl : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     /// <returns></returns>
     public bool StartRecording(bool isLoop = false) //8000,16000
     {
+        Debug.Log("开始录音");
         if (isHaveMic == false || Microphone.IsRecording(currentDeviceName))
         {
             return false;
@@ -145,6 +165,7 @@ public class AudioControl : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         trueLength = EndRecording();
         if (trueLength > 1)
         {
+            Debug.Log("开始录音");
             audioSource.PlayOneShot(saveAudioClip);
             StartCoroutine(_StartBaiduYuYin());
         }
@@ -174,6 +195,7 @@ public class AudioControl : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
             if (match.Success)
             {
                 //表示正则匹配到了accessToken
+                LogBox("拿到了token");
                 accessToken = match.Groups[1].ToString();
             }
             else
@@ -183,6 +205,29 @@ public class AudioControl : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         }
     }
 
+   
+
+   
+    public void AsrData(byte[] data)
+    {
+        // 设置APPID/AK/SK
+        var APP_ID = "你的 App ID";
+        var API_KEY = "你的 Api Key";
+        var SECRET_KEY = "你的 Secret Key";
+        var client = new Baidu.Aip.Speech.Asr(appID,apiKey, secretKey);
+        client.Timeout = 60000;  // 修改超时时间
+        //var data = File.ReadAllBytes(pcmPath);
+
+        // 可选参数
+        var options = new Dictionary<string, object>
+     {
+        {"dev_pid", 1537}
+     };
+        client.Timeout = 120000; // 若语音较长，建议设置更大的超时时间. ms
+        var result = client.Recognize(data, "pcm", 16000, options);
+        LogBox("识别成功:" + result);
+        Console.Write(result);
+    }
     /// <summary>
     /// 发起语音识别请求
     /// </summary>
@@ -195,7 +240,7 @@ public class AudioControl : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         }
 
         asrResult = string.Empty;
-
+        LogBox("处理录音数据");
         //处理当前录音数据为PCM16
         float[] samples = new float[recordFrequency * trueLength * saveAudioClip.channels];
         saveAudioClip.GetData(samples, 0);
@@ -205,35 +250,37 @@ public class AudioControl : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
             samplesShort[index] = (short)(samples[index] * short.MaxValue);
         }
         byte[] datas = new byte[samplesShort.Length * 2];
-        Buffer.BlockCopy(samplesShort, 0, datas, 0, datas.Length);
+        AsrData(datas);
+       
+        //Buffer.BlockCopy(samplesShort, 0, datas, 0, datas.Length);
 
-        string url = string.Format("{0}?cuid={1}&token={2}", "https://vop.baidu.com/server_api", SystemInfo.deviceUniqueIdentifier, accessToken);
+        //string url = string.Format("{0}?cuid={1}&token={2}", "https://vop.baidu.com/server_api", SystemInfo.deviceUniqueIdentifier, accessToken);
 
-        WWWForm wwwForm = new WWWForm();
-        wwwForm.AddBinaryData("audio", datas);
+        //WWWForm wwwForm = new WWWForm();
+        //wwwForm.AddBinaryData("audio", datas);
 
-        UnityWebRequest unityWebRequest = UnityWebRequest.Post(url, wwwForm);
+        //UnityWebRequest unityWebRequest = UnityWebRequest.Post(url, wwwForm);
 
-        unityWebRequest.SetRequestHeader("Content-Type", "audio/pcm;rate=" + recordFrequency);
+        //unityWebRequest.SetRequestHeader("Content-Type", "audio/pcm;rate=" + recordFrequency);
 
-        yield return unityWebRequest.SendWebRequest();
+        //yield return unityWebRequest.SendWebRequest();
 
-        if (string.IsNullOrEmpty(unityWebRequest.error))
-        {
-            asrResult = unityWebRequest.downloadHandler.text;
-            if (Regex.IsMatch(asrResult, @"err_msg.:.success"))
-            {
-                Match match = Regex.Match(asrResult, "result.:..(.*?)..]");
-                if (match.Success)
-                {
-                    asrResult = match.Groups[1].ToString();
-                }
-            }
-            else
-            {
-                asrResult = "识别结果为空";
-            }
-            textResult.text = asrResult;
-        }
+        //if (string.IsNullOrEmpty(unityWebRequest.error))
+        //{
+        //    asrResult = unityWebRequest.downloadHandler.text;
+        //    if (Regex.IsMatch(asrResult, @"err_msg.:.success"))
+        //    {
+        //        Match match = Regex.Match(asrResult, "result.:..(.*?)..]");
+        //        if (match.Success)
+        //        {
+        //            asrResult = match.Groups[1].ToString();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        asrResult = "识别结果为空";
+        //    }
+        //    textResult.text = asrResult;
+        //}
     }
 }
