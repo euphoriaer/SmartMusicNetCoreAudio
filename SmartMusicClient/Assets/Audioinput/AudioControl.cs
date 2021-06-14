@@ -1,68 +1,69 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using Wit.BaiduAip.Speech;
 
-//RequireComponentµÄÕâÁ½¸ö×é¼şÖ÷ÒªÓÃÓÚ²¥·Å×Ô¼ºÂ¼ÖÆµÄÉùÒô,²»ĞèÒª¿ÌÒâÉ¾³ı,Í¬Ê±×¢ÒâÉ¾³ıÊ¹ÓÃ×é¼şµÄ´úÂë
+//RequireComponentçš„è¿™ä¸¤ä¸ªç»„ä»¶ä¸»è¦ç”¨äºæ’­æ”¾è‡ªå·±å½•åˆ¶çš„å£°éŸ³,ä¸éœ€è¦åˆ»æ„åˆ é™¤,åŒæ—¶æ³¨æ„åˆ é™¤ä½¿ç”¨ç»„ä»¶çš„ä»£ç 
 [RequireComponent(typeof(AudioListener)), RequireComponent(typeof(AudioSource))]
 public class AudioControl : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    //°Ù¶ÈÓïÒôÊ¶±ğÏà¹Økey
+    //ç™¾åº¦è¯­éŸ³è¯†åˆ«ç›¸å…³key
     //string appId = "";
     public string appID = "";
-    public string apiKey = "";              //ÌîĞ´×Ô¼ºµÄapiKey
-    public string secretKey = "";         //ÌîĞ´×Ô¼ºµÄsecretKey
-    public Text logText;
-    private string logString="";
 
-    //¼ÇÂ¼accesstokenÁîÅÆ
+    public string apiKey = "";              //å¡«å†™è‡ªå·±çš„apiKey
+    public string secretKey = "";         //å¡«å†™è‡ªå·±çš„secretKey
+    public Text logText;
+    private string logString = "";
+
+    //è®°å½•accesstokenä»¤ç‰Œ
     private string accessToken = string.Empty;
 
-    //ÓïÒôÊ¶±ğµÄ½á¹û
+    //è¯­éŸ³è¯†åˆ«çš„ç»“æœ
     public string asrResult = string.Empty;
 
-    //±ê¼ÇÊÇ·ñÓĞÂó¿Ë·ç
+    //æ ‡è®°æ˜¯å¦æœ‰éº¦å…‹é£
     public bool isHaveMic = false;
 
-    //µ±Ç°Â¼ÒôÉè±¸Ãû³Æ
+    //å½“å‰å½•éŸ³è®¾å¤‡åç§°
     public string currentDeviceName = string.Empty;
 
-    //Â¼ÒôÆµÂÊ,¿ØÖÆÂ¼ÒôÖÊÁ¿(8000,16000)
+    //å½•éŸ³é¢‘ç‡,æ§åˆ¶å½•éŸ³è´¨é‡(8000,16000)
     public int recordFrequency = 15000;
 
-    //ÉÏ´Î°´ÏÂÊ±¼ä´Á
+    //ä¸Šæ¬¡æŒ‰ä¸‹æ—¶é—´æˆ³
     private double lastPressTimestamp = 0;
 
-    //±íÊ¾Â¼ÒôµÄ×î´óÊ±³¤
+    //è¡¨ç¤ºå½•éŸ³çš„æœ€å¤§æ—¶é•¿
     private int recordMaxLength = 100;
 
-    //Êµ¼ÊÂ¼Òô³¤¶È(ÓÉÓÚunityµÄÂ¼ÒôĞèÏÈÖ¸¶¨³¤¶È,µ¼ÖÂÊ¶±ğÉÏ´«Ê±ºò»áÉÏ´«¶àÓàµÄÎŞĞ§×Ö½Ú)
-    //Í¨¹ı¸Ã×Ö¶Î,»ñÈ¡ÓĞĞ§Â¼Òô³¤¶È,ÉÏ´«Ê±ºò¼ôÇĞµ½ÎŞĞ§µÄ×Ö½ÚÊı¾İ¼´¿É
+    //å®é™…å½•éŸ³é•¿åº¦(ç”±äºunityçš„å½•éŸ³éœ€å…ˆæŒ‡å®šé•¿åº¦,å¯¼è‡´è¯†åˆ«ä¸Šä¼ æ—¶å€™ä¼šä¸Šä¼ å¤šä½™çš„æ— æ•ˆå­—èŠ‚)
+    //é€šè¿‡è¯¥å­—æ®µ,è·å–æœ‰æ•ˆå½•éŸ³é•¿åº¦,ä¸Šä¼ æ—¶å€™å‰ªåˆ‡åˆ°æ— æ•ˆçš„å­—èŠ‚æ•°æ®å³å¯
     private int trueLength = 100;
 
-    //´æ´¢Â¼ÒôµÄÆ¬¶Î
+    //å­˜å‚¨å½•éŸ³çš„ç‰‡æ®µ
     [HideInInspector]
-     public AudioClip saveAudioClip;
+    public AudioClip saveAudioClip;
 
-    //µ±Ç°°´Å¥ÏÂµÄÎÄ±¾
+    //å½“å‰æŒ‰é’®ä¸‹çš„æ–‡æœ¬
     public Text textBtn;
 
-    //ÏÔÊ¾½á¹ûµÄÎÄ±¾
+    //æ˜¾ç¤ºç»“æœçš„æ–‡æœ¬
     public Text textResult;
 
-    //ÒôÔ´
+    //éŸ³æº
     public AudioSource audioSource;
 
-    void Start()
+    private void Start()
     {
-        Debug.Log("»ñÈ¡Âó¿Ë·ç");
-        //»ñÈ¡Âó¿Ë·çÉè±¸£¬ÅĞ¶ÏÊÇ·ñÓĞÂó¿Ë·çÉè±¸
+        Debug.Log("è·å–éº¦å…‹é£");
+        //è·å–éº¦å…‹é£è®¾å¤‡ï¼Œåˆ¤æ–­æ˜¯å¦æœ‰éº¦å…‹é£è®¾å¤‡
         if (Microphone.devices.Length > 0)
         {
             isHaveMic = true;
@@ -70,25 +71,25 @@ public class AudioControl : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         }
         else
         {
-            Debug.LogError("Ã»ÓĞ»ñÈ¡Âó¿Ë·ç");
+            Debug.LogError("æ²¡æœ‰è·å–éº¦å…‹é£");
         }
 
-        //»ñÈ¡Ïà¹Ø×é¼ş
+        //è·å–ç›¸å…³ç»„ä»¶
         textBtn = this.transform.GetChild(0).GetComponent<Text>();
         audioSource = this.GetComponent<AudioSource>();
-        textResult = this.transform.parent.GetChild(1).GetComponent<Text>();
-     
+        // textResult = this.transform.parent.GetChild(1).GetComponent<Text>();
+    }
 
-    }
     private StringBuilder buildString;
-    private void LogBox(string message)
-    {
-        buildString.AppendLine(message);
-        logText.GetComponent<Text>().text = buildString.ToString();
-    }
+
+    //private void LogBox(string message)
+    //{
+    //    buildString.AppendLine(message);
+    //    logText.GetComponent<Text>().text = buildString.ToString();
+    //}
 
     /// <summary>
-    /// ¿ªÊ¼Â¼Òô
+    /// å¼€å§‹å½•éŸ³
     /// </summary>
     /// <param name="isLoop"></param>
     /// <param name="lengthSec"></param>
@@ -96,19 +97,19 @@ public class AudioControl : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     /// <returns></returns>
     public bool StartRecording(bool isLoop = false) //8000,16000
     {
-        Debug.Log("¿ªÊ¼Â¼Òô");
+        Debug.Log("å¼€å§‹å½•éŸ³");
         if (isHaveMic == false || Microphone.IsRecording(currentDeviceName))
         {
             return false;
         }
 
-        //¿ªÊ¼Â¼Òô
+        //å¼€å§‹å½•éŸ³
         /*
          * public static AudioClip Start(string deviceName, bool loop, int lengthSec, int frequency);
-         * deviceName   Â¼ÒôÉè±¸Ãû³Æ.
-         * loop         Èç¹û´ïµ½³¤¶È,ÊÇ·ñ¼ÌĞø¼ÇÂ¼
-         * lengthSec    Ö¸¶¨Â¼ÒôµÄ³¤¶È.
-         * frequency    ÒôÆµ²ÉÑùÂÊ   
+         * deviceName   å½•éŸ³è®¾å¤‡åç§°.
+         * loop         å¦‚æœè¾¾åˆ°é•¿åº¦,æ˜¯å¦ç»§ç»­è®°å½•
+         * lengthSec    æŒ‡å®šå½•éŸ³çš„é•¿åº¦.
+         * frequency    éŸ³é¢‘é‡‡æ ·ç‡
          */
 
         lastPressTimestamp = GetTimestampOfNowWithMillisecond();
@@ -119,7 +120,7 @@ public class AudioControl : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     }
 
     /// <summary>
-    /// Â¼Òô½áÊø,·µ»ØÊµ¼ÊµÄÂ¼ÒôÊ±³¤
+    /// å½•éŸ³ç»“æŸ,è¿”å›å®é™…çš„å½•éŸ³æ—¶é•¿
     /// </summary>
     /// <returns></returns>
     public int EndRecording()
@@ -129,15 +130,15 @@ public class AudioControl : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
             return 0;
         }
 
-        //½áÊøÂ¼Òô
+        //ç»“æŸå½•éŸ³
         Microphone.End(currentDeviceName);
 
-        //ÏòÉÏÈ¡Õû,±ÜÃâÒÅÂ©Â¼ÒôÄ©Î²
+        //å‘ä¸Šå–æ•´,é¿å…é—æ¼å½•éŸ³æœ«å°¾
         return Mathf.CeilToInt((float)(GetTimestampOfNowWithMillisecond() - lastPressTimestamp) / 1000f);
     }
 
     /// <summary>
-    /// »ñÈ¡ºÁÃë¼¶±ğµÄÊ±¼ä´Á,ÓÃÓÚ¼ÆËã°´ÏÂÂ¼ÒôÊ±³¤
+    /// è·å–æ¯«ç§’çº§åˆ«çš„æ—¶é—´æˆ³,ç”¨äºè®¡ç®—æŒ‰ä¸‹å½•éŸ³æ—¶é•¿
     /// </summary>
     /// <returns></returns>
     public double GetTimestampOfNowWithMillisecond()
@@ -146,40 +147,40 @@ public class AudioControl : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     }
 
     /// <summary>
-    /// °´ÏÂÂ¼Òô°´Å¥
+    /// æŒ‰ä¸‹å½•éŸ³æŒ‰é’®
     /// </summary>
     /// <param name="eventData"></param>
     public void OnPointerDown(PointerEventData eventData)
     {
-        textBtn.text = "ËÉ¿ªÊ¶±ğ";
+        textBtn.text = "æ¾å¼€è¯†åˆ«";
         StartRecording();
     }
 
     /// <summary>
-    /// ·Å¿ªÂ¼Òô°´Å¥
+    /// æ”¾å¼€å½•éŸ³æŒ‰é’®
     /// </summary>
     /// <param name="eventData"></param>
     public void OnPointerUp(PointerEventData eventData)
     {
-        textBtn.text = "°´×¡Ëµ»°";
+        textBtn.text = "æŒ‰ä½è¯´è¯ing";
         trueLength = EndRecording();
         if (trueLength > 1)
         {
-            Debug.Log("¿ªÊ¼Â¼Òô");
+            Debug.Log("æ’­æ”¾å½•ä¸‹çš„å£°éŸ³");
             audioSource.PlayOneShot(saveAudioClip);
             StartCoroutine(_StartBaiduYuYin());
         }
         else
         {
-            textResult.text = "Â¼ÒôÊ±³¤¹ı¶Ì";
+            textResult.text = "å½•éŸ³æ—¶é•¿è¿‡çŸ­";
         }
     }
 
     /// <summary>
-    /// »ñÈ¡accessTokenÇëÇóÁîÅÆ
+    /// è·å–accessTokenè¯·æ±‚ä»¤ç‰Œ
     /// </summary>
     /// <returns></returns>
-    IEnumerator _GetAccessToken()
+    private IEnumerator _GetAccessToken()
     {
         var uri =
             string.Format(
@@ -190,49 +191,64 @@ public class AudioControl : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
         if (unityWebRequest.isDone)
         {
-            //ÕâÀï¿ÉÒÔ¿¼ÂÇÓÃJson,±¾ÈË±È½ÏÀÁËùÒÔÓÃÕıÔòÆ¥Åä³öaccessToken
+            //è¿™é‡Œå¯ä»¥è€ƒè™‘ç”¨Json,æœ¬äººæ¯”è¾ƒæ‡’æ‰€ä»¥ç”¨æ­£åˆ™åŒ¹é…å‡ºaccessToken
             Match match = Regex.Match(unityWebRequest.downloadHandler.text, @"access_token.:.(.*?).,");
             if (match.Success)
             {
-                //±íÊ¾ÕıÔòÆ¥Åäµ½ÁËaccessToken
-                LogBox("ÄÃµ½ÁËtoken");
+                //è¡¨ç¤ºæ­£åˆ™åŒ¹é…åˆ°äº†accessToken
+                Debug.Log("æ‹¿åˆ°äº†token");
                 accessToken = match.Groups[1].ToString();
             }
             else
             {
-                textResult.text = "ÑéÖ¤´íÎó,»ñÈ¡AccessTokenÊ§°Ü!!!";
+                textResult.text = "éªŒè¯é”™è¯¯,è·å–AccessTokenå¤±è´¥!!!";
             }
         }
     }
 
-   
-
-   
     public void AsrData(byte[] data)
     {
-        // ÉèÖÃAPPID/AK/SK
-        var APP_ID = "ÄãµÄ App ID";
-        var API_KEY = "ÄãµÄ Api Key";
-        var SECRET_KEY = "ÄãµÄ Secret Key";
-        var client = new Baidu.Aip.Speech.Asr(appID,apiKey, secretKey);
-        client.Timeout = 60000;  // ĞŞ¸Ä³¬Ê±Ê±¼ä
+        // è®¾ç½®APPID/AK/SK
+        var APP_ID = "ä½ çš„ App ID";
+        var API_KEY = "ä½ çš„ Api Key";
+        var SECRET_KEY = "ä½ çš„ Secret Key";
+        var client = new Baidu.Aip.Speech.Asr(appID, apiKey, secretKey);
+        client.Timeout = 60000;  // ä¿®æ”¹è¶…æ—¶æ—¶é—´
         //var data = File.ReadAllBytes(pcmPath);
 
-        // ¿ÉÑ¡²ÎÊı
+        // å¯é€‰å‚æ•°
         var options = new Dictionary<string, object>
      {
         {"dev_pid", 1537}
      };
-        client.Timeout = 120000; // ÈôÓïÒô½Ï³¤£¬½¨ÒéÉèÖÃ¸ü´óµÄ³¬Ê±Ê±¼ä. ms
+        client.Timeout = 120000; // è‹¥è¯­éŸ³è¾ƒé•¿ï¼Œå»ºè®®è®¾ç½®æ›´å¤§çš„è¶…æ—¶æ—¶é—´. ms
         var result = client.Recognize(data, "pcm", 16000, options);
-        LogBox("Ê¶±ğ³É¹¦:" + result);
+        Debug.Log("è¯†åˆ«æˆåŠŸ:" + result);
+        //LogBox("è¯†åˆ«æˆåŠŸ:" + result);
         Console.Write(result);
     }
+
+    public byte[] AudioClipToByte(AudioClip clip)
+    {
+        float[] data = new float[clip.samples];
+        clip.GetData(data, 0);
+        int rescaleFactor = 32767; //to convert float to Int16
+Â  Â  Â  Â  byte[] outData = new byte[data.Length * 2];
+        for (int i = 0; i < data.Length; i++)
+        {
+            short temshort = (short)(data[i] * rescaleFactor);
+            byte[] temdata = BitConverter.GetBytes(temshort);
+            outData[i * 2] = temdata[0];
+            outData[i * 2 + 1] = temdata[1];
+        }
+        return outData;
+    }
+
     /// <summary>
-    /// ·¢ÆğÓïÒôÊ¶±ğÇëÇó
+    /// å‘èµ·è¯­éŸ³è¯†åˆ«è¯·æ±‚
     /// </summary>
     /// <returns></returns>
-    IEnumerator _StartBaiduYuYin()
+    private IEnumerator _StartBaiduYuYin()
     {
         if (string.IsNullOrEmpty(accessToken))
         {
@@ -240,18 +256,19 @@ public class AudioControl : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         }
 
         asrResult = string.Empty;
-        LogBox("´¦ÀíÂ¼ÒôÊı¾İ");
-        //´¦Àíµ±Ç°Â¼ÒôÊı¾İÎªPCM16
-        float[] samples = new float[recordFrequency * trueLength * saveAudioClip.channels];
-        saveAudioClip.GetData(samples, 0);
-        var samplesShort = new short[samples.Length];
-        for (var index = 0; index < samples.Length; index++)
-        {
-            samplesShort[index] = (short)(samples[index] * short.MaxValue);
-        }
-        byte[] datas = new byte[samplesShort.Length * 2];
-        AsrData(datas);
-       
+        Debug.Log("å¤„ç†å½•éŸ³æ•°æ®");
+        //å¤„ç†å½“å‰å½•éŸ³æ•°æ®ä¸ºPCM16
+        //float[] samples = new float[recordFrequency * trueLength * saveAudioClip.channels];
+        //saveAudioClip.GetData(samples, 0);
+        //var samplesShort = new short[samples.Length];
+        //for (var index = 0; index < samples.Length; index++)
+        //{
+        //    samplesShort[index] = (short)(samples[index] * short.MaxValue);
+        //}
+        //byte[] datas = new byte[samplesShort.Length * 2];
+        var pcmAudio = Asr.ConvertAudioClipToPCM16(saveAudioClip);
+        AsrData(pcmAudio);
+
         //Buffer.BlockCopy(samplesShort, 0, datas, 0, datas.Length);
 
         //string url = string.Format("{0}?cuid={1}&token={2}", "https://vop.baidu.com/server_api", SystemInfo.deviceUniqueIdentifier, accessToken);
@@ -278,7 +295,7 @@ public class AudioControl : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         //    }
         //    else
         //    {
-        //        asrResult = "Ê¶±ğ½á¹ûÎª¿Õ";
+        //        asrResult = "è¯†åˆ«ç»“æœä¸ºç©º";
         //    }
         //    textResult.text = asrResult;
         //}

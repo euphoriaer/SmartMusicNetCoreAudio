@@ -26,7 +26,9 @@ public class SmartMusic : MonoBehaviour
     public float speed = 20;
     public Button stop;
     public Button upMusic;
-    
+    public ListenAudio audioCmdcs;
+
+    public static string audioCmd = "";
     //private static int port = 8888;
     private bool isConnect = false;
 
@@ -90,10 +92,11 @@ public class SmartMusic : MonoBehaviour
         FinishInit();
     }
 
-    private void DownMusic()
+    public void DownMusic()
     {
         MsgOrder msgOrder = new MsgOrder(SmartOrder.DownMusic.ToString());
         NetManager.Send(msgOrder);
+        isRotate = true;
     }
 
     private void FinishInit()
@@ -156,14 +159,14 @@ public class SmartMusic : MonoBehaviour
         return;
     }
 
-    private void PauseMusic()
+    public void PauseMusic()
     {
         isRotate = false;
         MsgOrder msgOrder = new MsgOrder(SmartOrder.PauseMusic.ToString());
         NetManager.Send(msgOrder);
     }
 
-    private void PlayMusic()
+    public void PlayMusic()
     {
         isRotate = true;
         MsgOrder msgOrder = new MsgOrder(SmartOrder.PlayMusic.ToString());
@@ -183,6 +186,7 @@ public class SmartMusic : MonoBehaviour
         connect = root.Find("Connect").GetComponent<Button>();
         MusicState = root.Find("MusicState").GetComponent<Text>();
         IPAddress1 = root.Find("IPAddress").GetComponent<InputField>();
+        audioCmdcs= root.Find("PictureMusic").GetComponent<ListenAudio>();
         IPAddress1.text = "121.4.107.99";
         MusicList = root.Find("MusicList").GetComponent<Transform>().gameObject;
 
@@ -200,7 +204,7 @@ public class SmartMusic : MonoBehaviour
         MusicListbtn.onClick.AddListener(GetMusicList);
     }
 
-    private void StopMusic()
+    public void StopMusic()
     {
         isRotate = false;
         MsgOrder msgOrder = new MsgOrder(SmartOrder.StopMusic.ToString());
@@ -221,6 +225,53 @@ public class SmartMusic : MonoBehaviour
         {
             pictureMusic.transform.Rotate(Vector3.forward, speed);
         }
+        //如果语音命令不为空就执行语音命令
+        if (audioCmd!="")
+        {
+          
+            Debug.LogError(audioCmd);
+            
+
+            if (audioCmd.Contains("播放"))
+            {
+                
+
+                if (lineMusic.Count!=0)
+                {
+                    foreach (var item in lineMusic)
+                    {
+                        //检查音乐列表，是否有cmd命令播放的音乐
+                        Text cont = item.GetComponent<Text>();
+                        if (audioCmd.Contains(cont.text))
+                        {
+                            
+                            Debug.LogError("播放指定音乐" + cont.text);
+                            //tudo 播放指定音乐
+                            break;
+                        }
+                    }
+                }
+                PlayMusic();
+
+            }
+            if (audioCmd.Contains("暂停"))
+            {
+                PauseMusic();
+            }
+            if (audioCmd.Contains("停止"))
+            {
+                StopMusic();
+            }
+            if (audioCmd.Contains("上一曲"))
+            {
+                UpMusic();
+            }
+            if (audioCmd.Contains("下一曲"))
+            {
+                DownMusic();
+            }
+            audioCmd = "";
+        }
 
         //如果 音量发生变化且计时结束 就发送消息
         if (Mathf.Abs(currentVolume-Volume.value)>=0.1&&time>=timeall)//todo 小技巧 不要用float进行 == 判定，误差
@@ -237,9 +288,10 @@ public class SmartMusic : MonoBehaviour
         }
     }
 
-    private void UpMusic()
+    public void UpMusic()
     {
         MsgOrder msgOrder = new MsgOrder(SmartOrder.UpMusic.ToString());
         NetManager.Send(msgOrder);
+        isRotate = true;
     }
 }
